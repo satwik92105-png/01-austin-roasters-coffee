@@ -9,4 +9,4 @@
   - Pricing packages: Tier 1 ($497 / $500), Tier 2 ($997 / $1,500), Tier 3 ($1,997 / $2,000).
   - FastAPI SQLite backend with X-Admin-PIN and Bearer JWT authorization.
   - Bidirectional order & menu merge in `shared/api-client.js`.
-  - Universal Google Sign-In with Roast Points unlocked across customer pages and mobile drawer.
+  - Universal Google Sign-In with Roastery Member account across customer pages and mobile drawer.
