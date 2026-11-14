@@ -45,9 +45,6 @@
 
   // Live Austin CST/CDT Open/Closed Status
   function initAustinTimeBadge(elementId) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-
     function update() {
       // Calculate Austin Time (America/Chicago)
       const now = new Date();
@@ -59,14 +56,15 @@
 
       // Cafe Hours: 6:30 AM (6.5) to 6:00 PM (18.0)
       const isOpen = timeDecimal >= 6.5 && timeDecimal < 18.0;
+      const html = isOpen ? `🟢 <b>Open Now</b> · Closes 6:00 PM CST` : `⚪ <b>Closed Now</b> · Opens 6:30 AM CST`;
+      const cls = isOpen ? "status-indicator" : "status-indicator closed";
 
-      if (isOpen) {
-        el.className = "status-indicator";
-        el.innerHTML = `🟢 <b>Open Now</b> · Closes 6:00 PM CST`;
-      } else {
-        el.className = "status-indicator closed";
-        el.innerHTML = `⚪ <b>Closed Now</b> · Opens 6:30 AM CST`;
-      }
+      const selectors = ['.austin-status-badge', '[data-austin-status]', '#hero-austin-status', '#hero-status-badge', '#mobile-drawer-status-badge'];
+      if (elementId) selectors.push(`#${elementId}`);
+      document.querySelectorAll(selectors.join(', ')).forEach(el => {
+        el.className = cls;
+        el.innerHTML = html;
+      });
     }
 
     update();
@@ -96,7 +94,7 @@
 
     loadCart() {
       try {
-        const raw = localStorage.getItem('flat_track_cart');
+        const raw = localStorage.getItem('flattrack_cart') || localStorage.getItem('flat_track_cart');
         this.items = raw ? JSON.parse(raw) : [];
       } catch (e) {
         this.items = [];
@@ -104,7 +102,9 @@
     },
 
     saveCart() {
-      localStorage.setItem('flat_track_cart', JSON.stringify(this.items));
+      const json = JSON.stringify(this.items);
+      localStorage.setItem('flattrack_cart', json);
+      localStorage.setItem('flat_track_cart', json);
       this.updateUI();
     },
 
@@ -532,8 +532,9 @@
 
     updateUI() {
       const count = this.items.reduce((acc, i) => acc + i.qty, 0);
-      const badge = document.getElementById('floating-cart-count');
-      if (badge) badge.innerText = count;
+      document.querySelectorAll('#cart-count, #floating-cart-count, .cart-count, [data-cart-count]').forEach(el => {
+        el.innerText = count;
+      });
 
       const wrap = document.getElementById('cart-items-wrap');
       if (!wrap) return;
@@ -706,6 +707,12 @@
   window.initAustinTimeBadge = initAustinTimeBadge;
   window.initDemoControls = initDemoControls;
   window.CartManager = CartManager;
+  window.addToCart = function(product, customizations = "") {
+    CartManager.addItem(product, customizations);
+  };
+  window.addCustomizedItemToCart = function(product, customizations = "") {
+    CartManager.addItem(product, customizations);
+  };
   window.generatePdfReceipt = generatePdfReceipt;
   window.initScrollAnimations = initScrollAnimations;
 

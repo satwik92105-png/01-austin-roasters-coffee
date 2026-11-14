@@ -206,6 +206,34 @@
     }
   }
 
+  function generateUUID() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  async function fetchWithRetry(url, options = {}, retries = 3, delays = [300, 600, 1200]) {
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        const res = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (res.ok || res.status < 500) {
+          return res;
+        }
+      } catch (err) {
+        if (attempt === retries - 1) break;
+      }
+      await new Promise(r => setTimeout(r, delays[attempt] || 500));
+    }
+    return null;
+  }
+
   // Public API Object
   window.FlatTrackAPI = {
     isBackendOnline: false,
@@ -224,7 +252,8 @@
     },
 
     getAdminHeaders() {
-      const headers = { 'Content-Type': 'application/json', 'X-Admin-PIN': '1234' };
+      const pin = sessionStorage.getItem('flattrack_admin_pin') || '1234';
+      const headers = { 'Content-Type': 'application/json', 'X-Admin-PIN': pin };
       try {
         const token = sessionStorage.getItem('flattrack_admin_token');
         if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -452,18 +481,24 @@
 
       // Instantly save to local state and broadcast
       state.orders.unshift(newOrder);
-      if (state.currentUser) {
+      const custUser = this.getCurrentUser();
+      if (custUser) {
         state.customerAccount = state.customerAccount || { tier: "Roastery Member", ordersCount: 0 };
         state.customerAccount.ordersCount = (state.customerAccount.ordersCount || 0) + 1;
       }
       saveState(state);
       notifySync('new_order', newOrder);
 
-      // Async transmit to FastAPI backend
+      // Async transmit to FastAPI backend with Idempotency-Key & retry
+      const idempotencyKey = generateUUID();
       try {
-        const resp = await fetch(`${API_BASE}/orders`, {
+        const resp = await fetchWithRetry(`${API_BASE}/orders`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Idempotency-Key': idempotencyKey,
+            'X-Idempotency-Key': idempotencyKey
+          },
           body: JSON.stringify({
             customerName: newOrder.customerName,
             phone: newOrder.phone,
@@ -471,10 +506,9 @@
             subtotal: newOrder.subtotal,
             notes: newOrder.notes,
             paidOnline: isPaid
-          }),
-          signal: AbortSignal.timeout(5000)
+          })
         });
-        if (resp.ok) {
+        if (resp && resp.ok) {
           const serverOrder = await resp.json();
           if (serverOrder.id && serverOrder.id !== newOrder.id) {
             newOrder.id = serverOrder.id;
@@ -571,14 +605,18 @@
         notes: resData.notes || ""
       };
 
+      const idempotencyKey = generateUUID();
       try {
-        const resp = await fetch(`${API_BASE}/reservations`, {
+        const resp = await fetchWithRetry(`${API_BASE}/reservations`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newRes),
-          signal: AbortSignal.timeout(4000)
+          headers: {
+            'Content-Type': 'application/json',
+            'Idempotency-Key': idempotencyKey,
+            'X-Idempotency-Key': idempotencyKey
+          },
+          body: JSON.stringify(newRes)
         });
-        if (resp.ok) {
+        if (resp && resp.ok) {
           const saved = await resp.json();
           if (saved && saved.id) {
             newRes.id = saved.id;
@@ -700,35 +738,62 @@
 
     // AUTH & CUSTOMER ACCOUNT
     getCurrentUser() {
-      const state = loadState();
-      return state.currentUser || null;
+      try {
+        const raw = localStorage.getItem('flattrack_customer_session') || localStorage.getItem('flat_track_customer_session');
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return null;
+    },
+
+    getAdminUser() {
+      try {
+        const raw = sessionStorage.getItem('flattrack_admin_session');
+        if (raw) return JSON.parse(raw);
+        const pin = sessionStorage.getItem('flattrack_admin_pin');
+        if (pin === '1234' || pin === 'roastmaster123') {
+          return { email: 'admin@flattrackcoffee.com', name: 'Roastery Owner', role: 'admin' };
+        }
+      } catch (e) {}
+      return null;
     },
 
     async login(email, password) {
+      const isAdminAttempt = (email === "admin@flattrackcoffee.com" || password === "roastmaster123" || password === "1234");
       try {
-        const res = await fetch(`${API_BASE}/auth/login`, {
+        const res = await fetchWithRetry(`${API_BASE}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-          signal: AbortSignal.timeout(3000)
+          body: JSON.stringify({ email, password })
         });
-        if (res.ok) {
+        if (res && res.ok) {
           const data = await res.json();
-          const state = loadState();
-          state.currentUser = { email, name: email.split('@')[0], role: data.role };
-          saveState(state);
-          if (data.access_token) {
-            try { sessionStorage.setItem('flattrack_admin_token', data.access_token); } catch(e){}
+          if (data.role === 'admin' || isAdminAttempt) {
+            const adminUser = { email: email || "admin@flattrackcoffee.com", name: "Roastery Owner", role: "admin" };
+            try {
+              sessionStorage.setItem('flattrack_admin_session', JSON.stringify(adminUser));
+              if (data.access_token) sessionStorage.setItem('flattrack_admin_token', data.access_token);
+              if (password === '1234' || password === 'roastmaster123') sessionStorage.setItem('flattrack_admin_pin', password);
+            } catch(e){}
+            return { success: true, user: adminUser, token: data.access_token };
+          } else {
+            const custUser = { email, name: email.split('@')[0], role: data.role || 'customer', member: true };
+            try {
+              localStorage.setItem('flattrack_customer_session', JSON.stringify(custUser));
+              localStorage.setItem('flat_track_customer_session', JSON.stringify(custUser));
+              window.dispatchEvent(new CustomEvent('flat_track_auth_change', { detail: custUser }));
+            } catch(e){}
+            return { success: true, user: custUser, token: data.access_token };
           }
-          return { success: true, user: state.currentUser, token: data.access_token };
         }
       } catch (e) {}
-      if (email === "admin@flattrackcoffee.com" || password === "roastmaster123" || password === "1234") {
-        const state = loadState();
-        state.currentUser = { email: "admin@flattrackcoffee.com", name: "Roastery Owner", role: "admin" };
-        saveState(state);
-        try { sessionStorage.setItem('flattrack_admin_pin', '1234'); } catch(e){}
-        return { success: true, user: state.currentUser };
+
+      if (isAdminAttempt) {
+        const adminUser = { email: "admin@flattrackcoffee.com", name: "Roastery Owner", role: "admin" };
+        try {
+          sessionStorage.setItem('flattrack_admin_session', JSON.stringify(adminUser));
+          sessionStorage.setItem('flattrack_admin_pin', password === '1234' ? '1234' : 'roastmaster123');
+        } catch(e){}
+        return { success: true, user: adminUser };
       }
       return { success: false, message: "Invalid credentials" };
     },
@@ -736,47 +801,47 @@
     async register(email, password, name) {
       const user = { email, name: name || email.split('@')[0], role: "customer", member: true };
       try {
-        const res = await fetch(`${API_BASE}/auth/register`, {
+        const res = await fetchWithRetry(`${API_BASE}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name }),
-          signal: AbortSignal.timeout(3000)
+          body: JSON.stringify({ email, password, name })
         });
-        if (res.ok) {
+        if (res && res.ok) {
           const data = await res.json();
-          const state = loadState();
-          state.currentUser = user;
-          saveState(state);
-          return { success: true, user: user };
+          try {
+            localStorage.setItem('flattrack_customer_session', JSON.stringify(user));
+            localStorage.setItem('flat_track_customer_session', JSON.stringify(user));
+            window.dispatchEvent(new CustomEvent('flat_track_auth_change', { detail: user }));
+          } catch(e){}
+          return { success: true, user: user, token: data.access_token };
         }
       } catch (e) {}
-      const state = loadState();
-      state.currentUser = user;
-      saveState(state);
+
+      try {
+        localStorage.setItem('flattrack_customer_session', JSON.stringify(user));
+        localStorage.setItem('flat_track_customer_session', JSON.stringify(user));
+        window.dispatchEvent(new CustomEvent('flat_track_auth_change', { detail: user }));
+      } catch(e){}
       return { success: true, user: user };
     },
 
     async loginGoogle(email = "austin.guest@gmail.com", name = "Austin Member") {
       let userData = { email, name, role: "customer", member: true };
       try {
-        const res = await fetch(`${API_BASE}/auth/google`, {
+        const res = await fetchWithRetry(`${API_BASE}/auth/google`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, name }),
-          signal: AbortSignal.timeout(3500)
+          body: JSON.stringify({ email, name })
         });
-        if (res.ok) {
+        if (res && res.ok) {
           const data = await res.json();
           if (data.user) userData = { ...userData, ...data.user };
           this.isBackendOnline = true;
         }
       } catch (e) {}
 
-      const state = loadState();
-      state.currentUser = userData;
-      saveState(state);
-
       try {
+        localStorage.setItem('flattrack_customer_session', JSON.stringify(userData));
         localStorage.setItem('flat_track_customer_session', JSON.stringify(userData));
         window.dispatchEvent(new CustomEvent('flat_track_auth_change', { detail: userData }));
       } catch(e) {}
@@ -785,12 +850,21 @@
     },
 
     logout() {
-      const state = loadState();
-      state.currentUser = null;
-      saveState(state);
-      try { localStorage.removeItem('flat_track_customer_session'); } catch(e){}
+      try {
+        localStorage.removeItem('flattrack_customer_session');
+        localStorage.removeItem('flat_track_customer_session');
+      } catch(e){}
       notifySync('auth_change', null);
       window.dispatchEvent(new CustomEvent('flat_track_auth_change', { detail: null }));
+      return true;
+    },
+
+    logoutAdmin() {
+      try {
+        sessionStorage.removeItem('flattrack_admin_session');
+        sessionStorage.removeItem('flattrack_admin_token');
+        sessionStorage.removeItem('flattrack_admin_pin');
+      } catch(e){}
       return true;
     },
 

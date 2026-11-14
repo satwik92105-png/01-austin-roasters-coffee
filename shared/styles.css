@@ -520,7 +520,7 @@ button {
   inset: 0;
   background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(8px);
-  z-index: var(--z-drawer);
+  z-index: 7999;
   opacity: 0;
   visibility: hidden;
   transition: opacity 300ms ease, visibility 300ms ease;
@@ -535,12 +535,13 @@ button {
   position: fixed;
   top: 0;
   right: 0;
-  width: 100%;
-  max-width: 440px;
-  height: 100%;
+  width: min(420px, 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  box-sizing: border-box;
   background: var(--bg-elevated);
   border-left: 1px solid var(--border-medium);
-  z-index: calc(var(--z-drawer) + 1);
+  z-index: 8000;
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
@@ -1400,6 +1401,11 @@ header, .site-header, .navbar, .header-glass {
   .cart-drawer {
     width: 100% !important;
     max-width: 100vw !important;
+    height: 100dvh !important;
+    box-sizing: border-box !important;
+    right: 0 !important;
+    top: 0 !important;
+    z-index: 8000 !important;
   }
 
   /* Tables wrap horizontally on mobile */

@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Owner POS & Operations Portal — Flat Track Roasters</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=16.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=19.0">
   <style>
     body {
       background-color: #0c0a09;
@@ -192,7 +192,7 @@
           <h2>Menu Manager & Stock Toggle</h2>
           <p>Add new drinks, edit prices, delete items, or toggle Sold Out in 1 click.</p>
         </div>
-        <button class="btn btn-primary btn-sm" id="btn-open-add-product">Add New Product &plus;</button>
+        <button class="btn btn-primary" id="btn-open-add-product" style="background:var(--accent-gold); color:#0b0908; font-weight:700; padding:0.6rem 1.2rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(217,119,6,0.35); border:none; cursor:pointer;">+ Add New Menu Item</button>
       </div>
 
       <table class="crud-table">
@@ -298,8 +298,8 @@
     </div>
   </div>
 
-  <script src="../shared/api-client.js?v=16.0"></script>
-  <script src="../shared/components.js?v=16.0"></script>
+  <script src="../shared/api-client.js?v=19.0"></script>
+  <script src="../shared/components.js?v=19.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       initDemoControls({ tier: 'tier2', isAdmin: true });
@@ -360,18 +360,18 @@
       }
 
       // 1. ORDERS
-      async function loadOrders() {
-        if (!window.FlatTrackAPI) return;
-        const orders = await window.FlatTrackAPI.getOrders();
-        document.getElementById('orders-badge-count').innerText = orders.filter(o => o.status !== 'Picked Up').length;
+      let currentOrders = [];
+
+      function renderOrdersList() {
+        document.getElementById('orders-badge-count').innerText = currentOrders.filter(o => o.status !== 'Picked Up').length;
 
         const wrap = document.getElementById('orders-list-wrap');
-        if (orders.length === 0) {
+        if (currentOrders.length === 0) {
           wrap.innerHTML = `<p style="color:var(--text-secondary); padding:2rem; text-align:center;">No orders currently in queue.</p>`;
           return;
         }
 
-        wrap.innerHTML = orders.map(o => {
+        wrap.innerHTML = currentOrders.map(o => {
           const st = o.status || 'New Order';
           const isNew = st === 'New Order' || st === 'New' || st === 'Paid Online';
           const isPrep = st === 'Preparing' || st === 'In Prep';
@@ -421,11 +421,25 @@
         }).join('');
       }
 
-      window.advanceOrderStatus = async function(orderId, newStatus) {
+      async function loadOrders() {
+        if (!window.FlatTrackAPI) return;
+        currentOrders = await window.FlatTrackAPI.getOrders();
+        renderOrdersList();
+      }
+
+      window.advanceOrderStatus = function(orderId, newStatus) {
+        // Optimistic UI update (<50ms)
+        const target = currentOrders.find(o => String(o.id) === String(orderId));
+        if (target) {
+          target.status = newStatus;
+          renderOrdersList();
+        }
+        showToast(`Order #${orderId} marked as ${newStatus}`, "success");
         if (window.FlatTrackAPI) {
-          await window.FlatTrackAPI.updateOrderStatus(orderId, newStatus);
-          showToast(`Order #${orderId} marked as ${newStatus}`, "success");
-          loadOrders();
+          window.FlatTrackAPI.updateOrderStatus(orderId, newStatus).catch(err => {
+            console.error("Order status sync notice:", err);
+            loadOrders();
+          });
         }
       };
 
@@ -483,10 +497,14 @@
       const addProdBtn = document.getElementById('btn-open-add-product');
       const prodClose = document.getElementById('product-modal-close');
 
+      window.closeMenuModal = function() {
+        if (prodModal) prodModal.classList.remove('is-open');
+      };
+
       addProdBtn.addEventListener('click', () => {
         prodForm.reset();
         document.getElementById('prod-id').value = '';
-        document.getElementById('product-modal-title').innerHTML = `<span>☕</span> Add New Product`;
+        document.getElementById('product-modal-title').innerHTML = `<span>✨</span> + Add New Menu Item`;
         document.getElementById('prod-image').value = 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80';
         prodModal.classList.add('is-open');
       });
@@ -507,9 +525,9 @@
         prodModal.classList.add('is-open');
       };
 
-      prodClose.addEventListener('click', () => prodModal.classList.remove('is-open'));
+      prodClose.addEventListener('click', closeMenuModal);
       prodModal.addEventListener('click', (e) => {
-        if (e.target === prodModal) prodModal.classList.remove('is-open');
+        if (e.target === prodModal) closeMenuModal();
       });
 
       prodForm.addEventListener('submit', async (e) => {
@@ -528,29 +546,33 @@
         if (idVal) itemData.id = parseInt(idVal, 10);
 
         if (window.FlatTrackAPI) {
-          await window.FlatTrackAPI.saveMenuItem(itemData);
-          prodModal.classList.remove('is-open');
-          showToast(`Menu saved! Customer tabs updated in real time.`, "success");
-          loadMenuCRUD();
+          try {
+            await window.FlatTrackAPI.saveMenuItem(itemData);
+            closeMenuModal();
+            showToast(`Menu saved! Customer tabs updated in real time.`, "success");
+            loadMenuCRUD();
+          } catch(err) {
+            console.error("Save error:", err);
+            closeMenuModal();
+          }
         }
       });
 
       // 3. RESERVATIONS
-      async function loadReservations() {
-        if (!window.FlatTrackAPI) return;
-        const resList = await window.FlatTrackAPI.getReservations();
-        const tbody = document.getElementById('reservations-tbody');
+      let currentReservations = [];
 
-        const activeCount = resList.filter(r => r.status === 'Confirmed').length;
+      function renderReservationsList() {
+        const tbody = document.getElementById('reservations-tbody');
+        const activeCount = currentReservations.filter(r => r.status === 'Confirmed').length;
         const badge = document.getElementById('res-badge-count');
         if (badge) badge.innerText = activeCount;
 
-        if (resList.length === 0) {
+        if (currentReservations.length === 0) {
           tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary); padding:2.5rem 1rem;">No table reservations booked yet. When customers submit reserve.html, their bookings appear here in real time.</td></tr>`;
           return;
         }
 
-        tbody.innerHTML = resList.map(r => {
+        tbody.innerHTML = currentReservations.map(r => {
           const party = r.partySize || r.party_size || 2;
           const rDate = r.date || r.res_date || 'Today';
           const rTime = r.time || r.res_time || '12:00 PM';
@@ -574,11 +596,25 @@
         }).join('');
       }
 
-      window.updateResStatus = async function(id, status) {
+      async function loadReservations() {
+        if (!window.FlatTrackAPI) return;
+        currentReservations = await window.FlatTrackAPI.getReservations();
+        renderReservationsList();
+      }
+
+      window.updateResStatus = function(id, status) {
+        // Optimistic UI update (<50ms)
+        const target = currentReservations.find(r => String(r.id) === String(id));
+        if (target) {
+          target.status = status;
+          renderReservationsList();
+        }
+        showToast(`Reservation #${id} updated to ${status}`, "success");
         if (window.FlatTrackAPI) {
-          await window.FlatTrackAPI.updateReservationStatus(id, status);
-          showToast(`Reservation #${id} updated to ${status}`, "success");
-          loadReservations();
+          window.FlatTrackAPI.updateReservationStatus(id, status).catch(err => {
+            console.error("Reservation status sync error:", err);
+            loadReservations();
+          });
         }
       };
 

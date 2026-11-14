@@ -4,21 +4,30 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from test_security import (
+    setup_function,
     test_health_check,
     test_public_can_read_menu,
-    test_unauthenticated_cannot_create_menu_item,
-    test_unauthenticated_cannot_delete_menu_item,
-    test_unauthenticated_cannot_toggle_stock,
-    test_admin_login_and_authenticated_mutation
+    test_unauthenticated_cannot_mutate_menu,
+    test_admin_login_and_authenticated_mutation,
+    test_brute_force_lockout_429,
+    test_mass_assignment_and_server_side_total_recalculation,
+    test_xss_input_sanitization,
+    test_idempotency_key_duplicate_prevention,
+    test_kds_role_authorization,
+    test_audit_logging_and_pagination
 )
 
 tests = [
     ("test_health_check", test_health_check),
     ("test_public_can_read_menu", test_public_can_read_menu),
-    ("test_unauthenticated_cannot_create_menu_item", test_unauthenticated_cannot_create_menu_item),
-    ("test_unauthenticated_cannot_delete_menu_item", test_unauthenticated_cannot_delete_menu_item),
-    ("test_unauthenticated_cannot_toggle_stock", test_unauthenticated_cannot_toggle_stock),
-    ("test_admin_login_and_authenticated_mutation", test_admin_login_and_authenticated_mutation)
+    ("test_unauthenticated_cannot_mutate_menu", test_unauthenticated_cannot_mutate_menu),
+    ("test_admin_login_and_authenticated_mutation", test_admin_login_and_authenticated_mutation),
+    ("test_brute_force_lockout_429", test_brute_force_lockout_429),
+    ("test_mass_assignment_and_server_side_total_recalculation", test_mass_assignment_and_server_side_total_recalculation),
+    ("test_xss_input_sanitization", test_xss_input_sanitization),
+    ("test_idempotency_key_duplicate_prevention", test_idempotency_key_duplicate_prevention),
+    ("test_kds_role_authorization", test_kds_role_authorization),
+    ("test_audit_logging_and_pagination", test_audit_logging_and_pagination)
 ]
 
 print("=== RUNNING FASTAPI SECURITY & ROLE VERIFICATION TESTS ===")
@@ -26,6 +35,7 @@ passed = 0
 failed = 0
 
 for name, test_fn in tests:
+    setup_function()
     try:
         test_fn()
         print(f"[PASS]: {name}")

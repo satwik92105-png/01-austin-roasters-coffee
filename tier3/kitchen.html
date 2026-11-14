@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Barista KDS — Flat Track Coffee Roasters</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=16.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=19.0">
   <style>
     body {
       background-color: #050404;
@@ -26,6 +26,8 @@
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
       padding: 1.5rem;
+      padding-top: 6.5rem;
+      margin-top: 96px;
     }
     .kds-card {
       background: #181411;
@@ -110,8 +112,8 @@
     <!-- Rendered dynamically -->
   </main>
 
-  <script src="../shared/api-client.js?v=16.0"></script>
-  <script src="../shared/components.js?v=16.0"></script>
+  <script src="../shared/api-client.js?v=19.0"></script>
+  <script src="../shared/components.js?v=19.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Live digital clock
@@ -150,12 +152,16 @@
 
       // Load & Render Tickets
       const grid = document.getElementById('kds-grid');
+      let localKdsOrders = [];
 
-      async function renderKDS() {
-        if (!window.FlatTrackAPI) return;
-        const allOrders = await window.FlatTrackAPI.getOrders();
+      async function renderKDS(fetchFromBackend = true) {
+        if (fetchFromBackend && window.FlatTrackAPI) {
+          try {
+            localKdsOrders = await window.FlatTrackAPI.getOrders();
+          } catch(e) {}
+        }
         // Show only active tickets (not Picked Up)
-        const activeOrders = allOrders.filter(o => o.status !== 'Picked Up');
+        const activeOrders = (localKdsOrders || []).filter(o => o.status !== 'Picked Up');
 
         if (activeOrders.length === 0) {
           grid.innerHTML = `
@@ -183,7 +189,7 @@
               </div>
 
               <div class="kds-card-body">
-                ${o.items.map(i => `
+                ${(o.items || []).map(i => `
                   <div class="kds-item-line">
                     <span>${i.qty}x ${i.name}</span>
                   </div>
@@ -215,12 +221,21 @@
         }).join('');
       }
 
-      window.bumpKdsOrder = async function(id, nextStatus) {
+      window.bumpKdsOrder = function(id, nextStatus) {
+        // Optimistic UI transition (<50ms)
+        const target = localKdsOrders.find(o => String(o.id) === String(id));
+        if (target) {
+          target.status = nextStatus;
+          renderKDS(false);
+        }
+        playChime();
+        showToast(`Order #${id} updated to ${nextStatus}`, "success");
+
         if (window.FlatTrackAPI) {
-          await window.FlatTrackAPI.updateOrderStatus(id, nextStatus);
-          playChime();
-          showToast(`Order #${id} updated to ${nextStatus}`, "success");
-          renderKDS();
+          window.FlatTrackAPI.updateOrderStatus(id, nextStatus).catch(err => {
+            console.error("Order update sync error:", err);
+            renderKDS(true);
+          });
         }
       };
 
@@ -230,14 +245,14 @@
           if (event.action === 'new_order') {
             playChime();
             showToast(`🔔 Incoming Order #${event.payload.id}!`, "success", 4000);
-            renderKDS();
+            renderKDS(true);
           } else if (event.action === 'order_status_update') {
-            renderKDS();
+            renderKDS(true);
           }
         });
       }
 
-      renderKDS();
+      renderKDS(true);
     });
   </script>
 </body>

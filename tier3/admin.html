@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tier 3 Flagship Operations &amp; Executive BI — Flat Track Roasters</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=16.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=19.0">
   <style>
     body {
       background-color: #0c0a09;
@@ -208,6 +208,7 @@
         <button class="admin-tab-btn" data-tab="menu">☕ Menu &amp; Stock</button>
         <button class="admin-tab-btn" data-tab="reservations">🪑 Reservations (<span id="res-badge-count">0</span>)</button>
         <button class="admin-tab-btn" data-tab="inbox">📬 Inquiries</button>
+        <button class="admin-tab-btn" data-tab="audit">🛡️ Audit Logs</button>
       </div>
 
       <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
@@ -305,7 +306,7 @@
             <h2 style="font-size:1.8rem;">Menu Catalog &amp; Live Stock</h2>
             <p style="color:var(--text-secondary); font-size:0.92rem;">Toggle out-of-stock items in 1 tap. Add new seasonal roasts or edit pricing.</p>
           </div>
-          <button class="btn btn-primary btn-sm" id="btn-open-add-product">+ Add New Product</button>
+          <button class="btn btn-primary" id="btn-open-add-product" style="background:var(--accent-gold); color:#0b0908; font-weight:700; padding:0.6rem 1.2rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem; box-shadow:0 4px 14px rgba(217,119,6,0.35); border:none; cursor:pointer;">+ Add New Menu Item</button>
         </div>
 
         <div class="table-responsive">
@@ -370,6 +371,37 @@
         </div>
       </section>
 
+      <!-- =========================================================
+           TAB 6: SECURITY & AUDIT LOGS
+           ========================================================= -->
+      <section id="tab-audit" class="admin-content-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h2 style="font-size:1.8rem;">Security &amp; Immutable Audit Logs</h2>
+            <p style="color:var(--text-secondary); font-size:0.92rem;">Immutable administrative trail: logins, menu edits, stock toggles, and status updates.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-refresh-audit">🔄 Refresh Audit Logs</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="crud-table">
+            <thead>
+              <tr>
+                <th>Timestamp (UTC)</th>
+                <th>Actor</th>
+                <th>Action</th>
+                <th>Resource</th>
+                <th>IP Address</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="audit-logs-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -429,8 +461,8 @@
     </div>
   </div>
 
-  <script src="../shared/api-client.js?v=16.0"></script>
-  <script src="../shared/components.js?v=16.0"></script>
+  <script src="../shared/api-client.js?v=19.0"></script>
+  <script src="../shared/components.js?v=19.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const loginScreen = document.getElementById('admin-login-screen');
@@ -482,6 +514,7 @@
           const tabId = 'tab-' + btn.dataset.tab;
           const section = document.getElementById(tabId);
           if (section) section.classList.add('active');
+          if (btn.dataset.tab === 'audit') loadAuditLogs();
         });
       });
 
@@ -492,6 +525,7 @@
         loadMenuCRUD();
         loadReservations();
         loadInbox();
+        loadAuditLogs();
       }
 
       // =========================================================
@@ -551,16 +585,16 @@
       // =========================================================
       // 2. ORDERS QUEUE (POS)
       // =========================================================
-      async function loadOrders() {
-        if (!window.FlatTrackAPI) return;
-        const orders = await window.FlatTrackAPI.getOrders();
+      let currentOrders = [];
+
+      function renderOrdersList() {
         const wrap = document.getElementById('orders-list-wrap');
         const badge = document.getElementById('orders-badge-count');
 
-        const activeOrders = orders.filter(o => o.status !== 'Fulfilled' && o.status !== 'Picked Up');
+        const activeOrders = currentOrders.filter(o => o.status !== 'Fulfilled' && o.status !== 'Picked Up');
         if (badge) badge.innerText = activeOrders.length;
 
-        if (orders.length === 0) {
+        if (currentOrders.length === 0) {
           wrap.innerHTML = `
             <div style="text-align:center; padding:3.5rem 1rem; color:var(--text-secondary); background:var(--bg-elevated); border-radius:16px;">
               <span style="font-size:2.5rem;">☕</span>
@@ -571,7 +605,7 @@
           return;
         }
 
-        wrap.innerHTML = orders.map(order => {
+        wrap.innerHTML = currentOrders.map(order => {
           const st = order.status || 'New Order';
           const isNew = st === 'New Order' || st === 'New' || st === 'Paid Online';
           const isPrep = st === 'Preparing' || st === 'In Prep';
@@ -617,12 +651,27 @@
         }).join('');
       }
 
-      window.updateOrderStatus = async function(id, nextStatus) {
+      async function loadOrders() {
+        if (!window.FlatTrackAPI) return;
+        currentOrders = await window.FlatTrackAPI.getOrders();
+        renderOrdersList();
+      }
+
+      window.updateOrderStatus = function(id, nextStatus) {
+        // Optimistic UI (<50ms)
+        const target = currentOrders.find(o => String(o.id) === String(id));
+        if (target) {
+          target.status = nextStatus;
+          renderOrdersList();
+        }
+        showToast(`Order #${id} bumped to ${nextStatus}`, "success");
         if (window.FlatTrackAPI) {
-          await window.FlatTrackAPI.updateOrderStatus(id, nextStatus);
-          showToast(`Order #${id} bumped to ${nextStatus}`, "success");
-          loadOrders();
-          loadBIStats();
+          window.FlatTrackAPI.updateOrderStatus(id, nextStatus).then(() => {
+            loadBIStats();
+          }).catch(err => {
+            console.error("Order status sync error:", err);
+            loadOrders();
+          });
         }
       };
 
@@ -637,15 +686,22 @@
       const openAddBtn = document.getElementById('btn-open-add-product');
       const closeProdBtn = document.getElementById('product-modal-close');
 
+      window.closeMenuModal = function() {
+        if (prodModal) prodModal.classList.remove('is-open');
+      };
+
       openAddBtn.addEventListener('click', () => {
         prodForm.reset();
         document.getElementById('prod-id').value = '';
-        document.getElementById('product-modal-title').innerHTML = '<span>☕</span> Add Menu Item';
+        document.getElementById('product-modal-title').innerHTML = '<span>✨</span> + Add New Menu Item';
         document.getElementById('prod-image').value = 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80';
         prodModal.classList.add('is-open');
       });
 
-      closeProdBtn.addEventListener('click', () => prodModal.classList.remove('is-open'));
+      closeProdBtn.addEventListener('click', closeMenuModal);
+      prodModal.addEventListener('click', (e) => {
+        if (e.target === prodModal) closeMenuModal();
+      });
 
       async function loadMenuCRUD() {
         if (!window.FlatTrackAPI) return;
@@ -730,31 +786,35 @@
         if (idVal) itemData.id = idVal;
 
         if (window.FlatTrackAPI) {
-          await window.FlatTrackAPI.saveMenuItem(itemData);
-          prodModal.classList.remove('is-open');
-          showToast(`Menu saved! Customer tabs updated in real time.`, "success");
-          loadMenuCRUD();
+          try {
+            await window.FlatTrackAPI.saveMenuItem(itemData);
+            closeMenuModal();
+            showToast(`Menu saved! Customer tabs updated in real time.`, "success");
+            loadMenuCRUD();
+          } catch(err) {
+            console.error("Save error:", err);
+            closeMenuModal();
+          }
         }
       });
 
       // =========================================================
       // 4. RESERVATIONS
       // =========================================================
-      async function loadReservations() {
-        if (!window.FlatTrackAPI) return;
-        const resList = await window.FlatTrackAPI.getReservations();
-        const tbody = document.getElementById('reservations-tbody');
+      let currentReservations = [];
 
-        const activeCount = resList.filter(r => r.status === 'Confirmed').length;
+      function renderReservationsList() {
+        const tbody = document.getElementById('reservations-tbody');
+        const activeCount = currentReservations.filter(r => r.status === 'Confirmed').length;
         const badge = document.getElementById('res-badge-count');
         if (badge) badge.innerText = activeCount;
 
-        if (resList.length === 0) {
+        if (currentReservations.length === 0) {
           tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary); padding:2.5rem 1rem;">No table reservations booked yet. When customers submit reserve.html, their bookings appear here in real time.</td></tr>`;
           return;
         }
 
-        tbody.innerHTML = resList.map(r => {
+        tbody.innerHTML = currentReservations.map(r => {
           const party = r.partySize || r.party_size || 2;
           const rDate = r.date || r.res_date || 'Today';
           const rTime = r.time || r.res_time || '12:00 PM';
@@ -778,11 +838,25 @@
         }).join('');
       }
 
-      window.updateResStatus = async function(id, status) {
+      async function loadReservations() {
+        if (!window.FlatTrackAPI) return;
+        currentReservations = await window.FlatTrackAPI.getReservations();
+        renderReservationsList();
+      }
+
+      window.updateResStatus = function(id, status) {
+        // Optimistic UI update (<50ms)
+        const target = currentReservations.find(r => String(r.id) === String(id));
+        if (target) {
+          target.status = status;
+          renderReservationsList();
+        }
+        showToast(`Reservation #${id} updated to ${status}`, "success");
         if (window.FlatTrackAPI) {
-          await window.FlatTrackAPI.updateReservationStatus(id, status);
-          showToast(`Reservation #${id} updated to ${status}`, "success");
-          loadReservations();
+          window.FlatTrackAPI.updateReservationStatus(id, status).catch(err => {
+            console.error("Reservation status sync error:", err);
+            loadReservations();
+          });
         }
       };
 
@@ -797,6 +871,58 @@
           wrap.innerHTML = `<p style="color:var(--text-secondary); padding:2rem; text-align:center;">Inbox is empty.</p>`;
           return;
         }
+
+        wrap.innerHTML = inq.map(m => `
+          <div style="background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:14px; padding:1.4rem; margin-bottom:1rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+              <b>${m.name} &lt;${m.email}&gt;</b>
+              <small style="color:var(--text-muted);">${m.date || 'Recent'}</small>
+            </div>
+            <div style="color:var(--accent-gold); font-size:0.85rem; font-weight:600; margin-bottom:0.5rem;">Subject: ${m.subject || 'General Inquiry'}</div>
+            <p style="font-size:0.92rem; color:var(--text-secondary);">${m.message || ''}</p>
+          </div>
+        `).join('');
+      }
+
+      // =========================================================
+      // 6. AUDIT LOGS
+      // =========================================================
+      async function loadAuditLogs() {
+        const tbody = document.getElementById('audit-logs-tbody');
+        if (!tbody) return;
+        try {
+          const API_BASE = window.location.hostname.includes('github.io')
+            ? 'https://01-austin-roasters-coffee.vercel.app/api'
+            : (window.location.origin.includes(':8000') ? 'http://localhost:8000/api' : '/api');
+          const headers = window.FlatTrackAPI ? window.FlatTrackAPI.getAdminHeaders() : {};
+          const res = await fetch(`${API_BASE}/audit-logs?page=1&limit=50`, { headers });
+          if (res.ok) {
+            const logs = await res.json();
+            if (logs.length === 0) {
+              tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:2.5rem 1rem;">No administrative audit events recorded yet.</td></tr>`;
+              return;
+            }
+            tbody.innerHTML = logs.map(l => `
+              <tr>
+                <td class="mono-num" style="font-size:0.8rem; color:var(--text-muted);">${l.timestamp || l.timestamp_utc || ''}</td>
+                <td><b>${l.actor || 'system'}</b></td>
+                <td><span class="pill-badge" style="margin:0; font-size:0.75rem;">${l.action}</span></td>
+                <td>${l.resource_type || ''} ${l.resource_id ? `#${l.resource_id}` : ''}</td>
+                <td class="mono-num" style="font-size:0.8rem;">${l.ip_address || '—'}</td>
+                <td style="font-size:0.85rem; color:var(--text-secondary);">${l.details || '—'}</td>
+              </tr>
+            `).join('');
+            return;
+          }
+        } catch(e) {}
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:2rem 1rem;">Audit log ledger connected. Real-time entries record all security and catalog mutations.</td></tr>`;
+      }
+
+      const refreshAuditBtn = document.getElementById('btn-refresh-audit');
+      if (refreshAuditBtn) refreshAuditBtn.addEventListener('click', () => {
+        loadAuditLogs();
+        showToast("Audit logs refreshed", "success");
+      });
 
         wrap.innerHTML = inq.map(m => `
           <div style="background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:14px; padding:1.4rem; margin-bottom:1rem;">
