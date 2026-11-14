@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tier 3 Flagship Operations &amp; Executive BI — Flat Track Roasters</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=19.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=20.0">
   <style>
     body {
       background-color: #0c0a09;
@@ -56,7 +56,7 @@
     }
     .admin-content-section {
       display: none;
-      padding: 2.2rem 0 4rem 0;
+      padding: 8.5rem 0 4rem 0 !important;
     }
     .admin-content-section.active {
       display: block;
@@ -173,7 +173,7 @@
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.8rem;">
         Flat Track Coffee Roasters · Executive Console &amp; Counter POS
       </p>
-      <form id="admin-login-form">
+      <form id="admin-login-form" onsubmit="event.preventDefault(); if(window.handleAdminLogin) window.handleAdminLogin(event); return false;">
         <div class="form-group" style="text-align: left;">
           <label class="form-label">Owner / GM Email</label>
           <input type="email" id="login-email" class="form-input" value="admin@flattrackcoffee.com" required>
@@ -182,7 +182,7 @@
           <label class="form-label">Password / PIN</label>
           <input type="password" id="login-pass" class="form-input" placeholder="Enter PIN (1234 or roastmaster123)" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+        <button type="button" id="admin-login-btn" onclick="if(window.handleAdminLogin) window.handleAdminLogin(event);" class="btn btn-primary btn-lg" style="width: 100%;">
           Authorize &amp; Enter Flagship Console &rarr;
         </button>
       </form>
@@ -461,8 +461,8 @@
     </div>
   </div>
 
-  <script src="../shared/api-client.js?v=19.0"></script>
-  <script src="../shared/components.js?v=19.0"></script>
+  <script src="../shared/api-client.js?v=20.0"></script>
+  <script src="../shared/components.js?v=20.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const loginScreen = document.getElementById('admin-login-screen');
@@ -475,21 +475,26 @@
         showDashboard();
       }
 
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const pass = document.getElementById('login-pass').value;
+      window.handleAdminLogin = function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const pass = (document.getElementById('login-pass')?.value || '').trim();
         if (pass === 'roastmaster123' || pass === '1234') {
           sessionStorage.setItem('flattrack_admin_auth', 'true');
           sessionStorage.setItem('flattrack_admin_pin', '1234');
-          if (window.FlatTrackAPI && window.FlatTrackAPI.login) {
-            await window.FlatTrackAPI.login("admin@flattrackcoffee.com", pass);
-          }
           showDashboard();
           showToast("Authorized as Owner / GM (Tier 3 Flagship)", "success");
+          if (window.FlatTrackAPI && window.FlatTrackAPI.login) {
+            window.FlatTrackAPI.login("admin@flattrackcoffee.com", pass).catch(() => {});
+          }
         } else {
           showToast("Invalid PIN! Try 1234 or roastmaster123", "error");
         }
-      });
+        return false;
+      };
+
+      if (loginForm) {
+        loginForm.addEventListener('submit', window.handleAdminLogin);
+      }
 
       if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -923,18 +928,6 @@
         loadAuditLogs();
         showToast("Audit logs refreshed", "success");
       });
-
-        wrap.innerHTML = inq.map(m => `
-          <div style="background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:14px; padding:1.4rem; margin-bottom:1rem;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
-              <b>${m.name} &lt;${m.email}&gt;</b>
-              <small style="color:var(--text-muted);">${m.date || 'Recent'}</small>
-            </div>
-            <div style="color:var(--accent-gold); font-size:0.85rem; font-weight:600; margin-bottom:0.5rem;">Subject: ${m.subject || 'General Inquiry'}</div>
-            <p style="font-size:0.92rem; color:var(--text-secondary);">${m.message || ''}</p>
-          </div>
-        `).join('');
-      }
 
       // Live multi-tab sync
       if (window.FlatTrackAPI) {

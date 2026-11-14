@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Owner POS & Operations Portal — Flat Track Roasters</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=19.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=20.0">
   <style>
     body {
       background-color: #0c0a09;
@@ -40,7 +40,7 @@
     }
     .admin-content-section {
       display: none;
-      padding: 2.5rem 0;
+      padding: 8.5rem 0 4rem 0 !important;
     }
     .admin-content-section.active {
       display: block;
@@ -127,7 +127,7 @@
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.8rem;">
         Flat Track Coffee Roasters · Operations Console
       </p>
-      <form id="admin-login-form">
+      <form id="admin-login-form" onsubmit="event.preventDefault(); if(window.handleTier2Login) window.handleTier2Login(event); return false;">
         <div class="form-group" style="text-align: left;">
           <label class="form-label">Owner Email</label>
           <input type="email" id="login-email" class="form-input" value="admin@flattrackcoffee.com" required>
@@ -136,7 +136,7 @@
           <label class="form-label">Password / PIN</label>
           <input type="password" id="login-pass" class="form-input" value="" placeholder="Enter owner password or PIN" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+        <button type="button" id="admin-login-btn" onclick="if(window.handleTier2Login) window.handleTier2Login(event);" class="btn btn-primary btn-lg" style="width: 100%;">
           Authorize & Enter Terminal &rarr;
         </button>
       </form>
@@ -298,8 +298,8 @@
     </div>
   </div>
 
-  <script src="../shared/api-client.js?v=19.0"></script>
-  <script src="../shared/components.js?v=19.0"></script>
+  <script src="../shared/api-client.js?v=20.0"></script>
+  <script src="../shared/components.js?v=20.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       initDemoControls({ tier: 'tier2', isAdmin: true });
@@ -314,21 +314,26 @@
         showDashboard();
       }
 
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const pass = document.getElementById('login-pass').value;
+      window.handleTier2Login = function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        const pass = (document.getElementById('login-pass')?.value || '').trim();
         if (pass === 'roastmaster123' || pass === '1234') {
           sessionStorage.setItem('flattrack_admin_auth', 'true');
           sessionStorage.setItem('flattrack_admin_pin', '1234');
-          if (window.FlatTrackAPI && window.FlatTrackAPI.login) {
-            await window.FlatTrackAPI.login("admin@flattrackcoffee.com", pass);
-          }
           showDashboard();
           showToast("Authorized as Owner / GM", "success");
+          if (window.FlatTrackAPI && window.FlatTrackAPI.login) {
+            window.FlatTrackAPI.login("admin@flattrackcoffee.com", pass).catch(() => {});
+          }
         } else {
           showToast("Invalid credentials! Try roastmaster123 or 1234", "error");
         }
-      });
+        return false;
+      };
+
+      if (loginForm) {
+        loginForm.addEventListener('submit', window.handleTier2Login);
+      }
 
       logoutBtn.addEventListener('click', () => {
         sessionStorage.removeItem('flattrack_admin_auth');

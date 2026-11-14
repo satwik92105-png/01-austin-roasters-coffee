@@ -428,16 +428,25 @@
     },
 
     openDrawer() {
-      document.getElementById('cart-drawer-overlay').classList.add('is-open');
-      document.getElementById('cart-drawer').classList.add('is-open');
-      // Hide floating trigger while drawer is open to respect strict Z-Index rule
-      document.getElementById('floating-cart-trigger').classList.add('is-hidden');
+      const overlay = document.getElementById('cart-drawer-overlay');
+      const drawer = document.getElementById('cart-drawer');
+      if (overlay) overlay.classList.add('is-open', 'open', 'active');
+      if (drawer) {
+        drawer.classList.add('is-open', 'open', 'active');
+      }
+      const trigger = document.getElementById('floating-cart-trigger');
+      if (trigger) trigger.classList.add('is-hidden');
     },
 
     closeDrawer() {
-      document.getElementById('cart-drawer-overlay').classList.remove('is-open');
-      document.getElementById('cart-drawer').classList.remove('is-open');
-      document.getElementById('floating-cart-trigger').classList.remove('is-hidden');
+      const overlay = document.getElementById('cart-drawer-overlay');
+      const drawer = document.getElementById('cart-drawer');
+      if (overlay) overlay.classList.remove('is-open', 'open', 'active');
+      if (drawer) {
+        drawer.classList.remove('is-open', 'open', 'active');
+      }
+      const trigger = document.getElementById('floating-cart-trigger');
+      if (trigger) trigger.classList.remove('is-hidden');
     },
 
     openCheckoutModal() {
