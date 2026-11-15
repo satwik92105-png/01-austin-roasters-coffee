@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reserve a Table — Flat Track Coffee Roasters</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=20.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=21.0">
   <style>
     .reserve-card {
       background: var(--bg-elevated);
@@ -143,18 +143,20 @@
         </div>
 
         <!-- Action Buttons -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
           <a id="btn-add-calendar" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
-            📅 Add to Google Calendar
+            📅 Google Calendar
           </a>
+          <button id="btn-download-ics" type="button" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem;">
+            📥 Download .ics Pass
+          </button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
           <button id="btn-print-pass" type="button" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem;">
             🖨️ Print / Save Pass
           </button>
-        </div>
-
-        <div style="display:flex; flex-direction:column; gap:0.65rem; margin-bottom:1rem;">
-          <a id="btn-email-self" href="#" class="btn btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.9rem; padding:0.75rem 1rem; text-decoration:none;">
-            ✉️ Email Booking Details to Myself (Pre-filled) &rarr;
+          <a id="btn-email-self" href="#" class="btn btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
+            ✉️ Email Booking Details
           </a>
         </div>
       </div>
@@ -169,8 +171,8 @@
     </div>
   </footer>
 
-  <script src="../shared/api-client.js?v=20.0"></script>
-  <script src="../shared/components.js?v=20.0"></script>
+  <script src="../shared/api-client.js?v=21.0"></script>
+  <script src="../shared/components.js?v=21.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       initAustinTimeBadge('austin-status-badge');
@@ -305,6 +307,38 @@
 
             const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Table Reservation · Flat Track Coffee Roasters')}&dates=${startISO}/${endISO}&details=${encodeURIComponent('Table reservation for ' + name + ' (' + partySize + ' guests). Ref #' + res.id + ' at Flat Track Coffee Roasters.')}&location=${encodeURIComponent('1611 E Cesar Chavez St, Austin, TX 78702')}`;
             document.getElementById('btn-add-calendar').href = gCalUrl;
+
+            // Wire .ics file download
+            const btnIcs = document.getElementById('btn-download-ics');
+            if (btnIcs) {
+              btnIcs.onclick = () => {
+                const icsLines = [
+                  'BEGIN:VCALENDAR',
+                  'VERSION:2.0',
+                  'PRODID:-//Flat Track Coffee Roasters//Reservation//EN',
+                  'CALSCALE:GREGORIAN',
+                  'METHOD:PUBLISH',
+                  'BEGIN:VEVENT',
+                  `SUMMARY:Table Reservation · Flat Track Coffee Roasters (#${res.id})`,
+                  `DESCRIPTION:Table reservation for ${name} (${partySize} guests). Ref #${res.id} at Flat Track Coffee Roasters. Address: 1611 E Cesar Chavez St, Austin, TX 78702. Phone: (512) 540-6033.`,
+                  `LOCATION:1611 E Cesar Chavez St, Austin, TX 78702`,
+                  `DTSTART:${startISO}`,
+                  `DTEND:${endISO}`,
+                  `STATUS:CONFIRMED`,
+                  'END:VEVENT',
+                  'END:VCALENDAR'
+                ];
+                const blob = new Blob([icsLines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `flattrack-reservation-${res.id}.ics`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              };
+            }
           } catch (err) {
             console.warn('Calendar url build error', err);
           }

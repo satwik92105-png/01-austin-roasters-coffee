@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Ahead — Flat Track Coffee Roasters (Flagship)</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=20.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=21.0">
   <style>
     .menu-header-bar {
       padding: 3.5rem 0 2rem 0;
@@ -97,6 +97,7 @@
     #cart-drawer.is-open, .cart-drawer.is-open {
       transform: translateX(0) !important;
       right: 0 !important;
+      transition: none !important;
     }
     #cart-drawer *, .cart-drawer * {
       box-sizing: border-box !important;
@@ -356,12 +357,12 @@
 
   <!-- Drink Customization Modal -->
   <div class="modal-overlay" id="custom-modal-overlay">
-    <div class="modal-card">
+    <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-header">
         <h3 id="custom-modal-title"><span>☕</span> Customize Drink</h3>
-        <button class="modal-close-btn" id="custom-modal-close">&times;</button>
+        <button class="modal-close-btn" id="custom-modal-close" type="button">&times;</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" onclick="event.stopPropagation()">
         <div style="display:flex; gap:1rem; margin-bottom:1.2rem; align-items:center;">
           <img id="custom-modal-img" src="" style="width:70px; height:70px; border-radius:10px; object-fit:cover;">
           <div>
@@ -370,7 +371,16 @@
           </div>
         </div>
 
-        <form id="custom-form">
+        <form id="custom-form" onclick="event.stopPropagation()">
+          <div class="form-group">
+            <label class="form-label">Roast Profile &amp; Extraction Style</label>
+            <select class="form-select" id="custom-roast">
+              <option value="Flagship Medium-Dark" selected>Flagship Medium-Dark (Balanced dark cacao &amp; pecan)</option>
+              <option value="Nordic Light Micro-Lot">Nordic Light Micro-Lot (Vibrant floral &amp; bergamot)</option>
+              <option value="Slow Cold Drip Dial">Slow Cold Drip Dial (Velvety, ultra-smooth finish)</option>
+            </select>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Milk Selection</label>
             <select class="form-select" id="custom-milk">
@@ -416,8 +426,8 @@
     </div>
   </footer>
 
-  <script src="../shared/api-client.js?v=20.0"></script>
-  <script src="../shared/components.js?v=20.0"></script>
+  <script src="../shared/api-client.js?v=21.0"></script>
+  <script src="../shared/components.js?v=21.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       initAustinTimeBadge('austin-status-badge');
@@ -474,6 +484,13 @@
                 <h3 class="card-title">${item.name}</h3>
               </div>
               <p class="card-desc">${item.description}</p>
+              ${item.category === 'coffee' || item.category === 'espresso' || item.category === 'single-origin' || item.category === 'specialty' || (item.name && (item.name.toLowerCase().includes('latte') || item.name.toLowerCase().includes('cold brew') || item.name.toLowerCase().includes('roast') || item.name.toLowerCase().includes('espresso') || item.name.toLowerCase().includes('pour over'))) ? `
+                <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+                  <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●●●○</b></span>
+                  <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●●</b></span>
+                  <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●○</b></span>
+                </div>
+              ` : ''}
               <div class="card-footer">
                 <span class="card-price mono-num">$${item.price.toFixed(2)}</span>
                 ${item.inStock ? `
@@ -533,6 +550,7 @@
         e.preventDefault();
         if (!activeCustomItem) return;
 
+        const roast = document.getElementById('custom-roast') ? document.getElementById('custom-roast').value : 'Flagship Medium-Dark';
         const milk = document.getElementById('custom-milk').value;
         const sweet = document.getElementById('custom-sweet').value;
         const shots = document.getElementById('custom-shots').value;
@@ -547,7 +565,7 @@
           price: activeCustomItem.price + extraCost
         };
 
-        const details = `${milk} · ${sweet} · ${shots}`;
+        const details = `${roast} · ${milk} · ${sweet} · ${shots}`;
         window.addCustomizedItemToCart(customizedItem, details);
         closeCustomModal();
       });

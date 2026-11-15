@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reserve a Table — Flat Track Coffee Roasters (Flagship)</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=20.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=21.0">
   <style>
     .reserve-card {
       background: var(--bg-elevated);
@@ -81,13 +81,14 @@
               <input type="tel" id="res3-phone" class="form-input" required placeholder="(512) 555-0199">
             </div>
             <div class="form-group">
-              <label class="form-label">Party Size *</label>
+              <label class="form-label">Party Size &amp; Experience *</label>
               <select class="form-select" id="res3-party">
                 <option value="1">1 Person (Quiet Work Spot)</option>
                 <option value="2" selected>2 People (Table Booth)</option>
                 <option value="4">3 – 4 People (Communal Table)</option>
                 <option value="6">5 – 6 People (Large Roastery Table)</option>
                 <option value="8">7 – 8 People (Outdoor Patio Lounge)</option>
+                <option value="VIP-Tasting">VIP Roastery Bar &amp; Guided Tasting Flight (2–4 Guests)</option>
               </select>
             </div>
           </div>
@@ -160,18 +161,20 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
           <a id="btn-add-calendar3" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
-            📅 Add to Google Calendar
+            📅 Google Calendar
           </a>
+          <button id="btn-download-ics3" type="button" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem;">
+            📥 Download .ics Pass
+          </button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
           <button id="btn-print-pass3" type="button" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem;">
             🖨️ Print / Save Pass
           </button>
-        </div>
-
-        <div style="display:flex; flex-direction:column; gap:0.65rem; margin-bottom:1rem;">
-          <a id="btn-email-self3" href="#" class="btn btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.9rem; padding:0.75rem 1rem; text-decoration:none;">
-            ✉️ Email Booking Details to Myself (Pre-filled) &rarr;
+          <a id="btn-email-self3" href="#" class="btn btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
+            ✉️ Email Booking Details
           </a>
         </div>
       </div>
@@ -186,8 +189,8 @@
     </div>
   </footer>
 
-  <script src="../shared/api-client.js?v=20.0"></script>
-  <script src="../shared/components.js?v=20.0"></script>
+  <script src="../shared/api-client.js?v=21.0"></script>
+  <script src="../shared/components.js?v=21.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       initAustinTimeBadge();
@@ -301,6 +304,38 @@
               const startISO = `${cleanDate}T${startH}${m}00`;
               const endISO = `${cleanDate}T${endH}${m}00`;
               document.getElementById('btn-add-calendar3').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Table Reservation · Flat Track Coffee Roasters')}&dates=${startISO}/${endISO}&details=${encodeURIComponent('Table reservation for ' + name + ' (' + partySize + ' guests). Ref #' + res.id + ' at Flat Track Coffee Roasters.')}&location=${encodeURIComponent('1611 E Cesar Chavez St, Austin, TX 78702')}`;
+
+              // Wire .ics file download
+              const btnIcs3 = document.getElementById('btn-download-ics3');
+              if (btnIcs3) {
+                btnIcs3.onclick = () => {
+                  const icsLines = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//Flat Track Coffee Roasters//Reservation//EN',
+                    'CALSCALE:GREGORIAN',
+                    'METHOD:PUBLISH',
+                    'BEGIN:VEVENT',
+                    `SUMMARY:Table Reservation · Flat Track Coffee Roasters (#${res.id})`,
+                    `DESCRIPTION:Table reservation for ${name} (${partySize} guests). Ref #${res.id} at Flat Track Coffee Roasters. Address: 1611 E Cesar Chavez St, Austin, TX 78702. Phone: (512) 540-6033.`,
+                    `LOCATION:1611 E Cesar Chavez St, Austin, TX 78702`,
+                    `DTSTART:${startISO}`,
+                    `DTEND:${endISO}`,
+                    `STATUS:CONFIRMED`,
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                  ];
+                  const blob = new Blob([icsLines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `flattrack-reservation-${res.id}.ics`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                };
+              }
             } catch (err) {}
 
             // Pre-filled email link

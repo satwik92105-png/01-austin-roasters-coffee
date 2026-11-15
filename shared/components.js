@@ -193,13 +193,13 @@
 
         <!-- Checkout / Pickup Modal -->
         <div class="modal-overlay" id="checkout-modal-overlay">
-          <div class="modal-card" data-lenis-prevent>
+          <div class="modal-card" data-lenis-prevent onclick="event.stopPropagation()">
             <div class="modal-header">
               <h3 id="modal-checkout-heading"><span>☕</span> Complete Pickup Order</h3>
-              <button class="modal-close-btn" id="checkout-modal-close">&times;</button>
+              <button class="modal-close-btn" id="checkout-modal-close" type="button">&times;</button>
             </div>
-            <div class="modal-body">
-              <form id="checkout-form">
+            <div class="modal-body" onclick="event.stopPropagation()">
+              <form id="checkout-form" onclick="event.stopPropagation()">
                 <div class="form-group">
                   <label class="form-label">Full Name *</label>
                   <input type="text" id="cust-name" class="form-input" required placeholder="Your Full Name">
@@ -311,10 +311,22 @@
         this.openCheckoutModal();
       });
 
-      modalClose.addEventListener('click', () => this.closeCheckoutModal());
-      modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) this.closeCheckoutModal();
+      modalClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.closeCheckoutModal();
       });
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target !== modalOverlay || e.target !== e.currentTarget) return;
+        this.closeCheckoutModal();
+      });
+      const modalCard = modalOverlay.querySelector('.modal-card');
+      if (modalCard) {
+        modalCard.addEventListener('click', (e) => e.stopPropagation());
+      }
+      if (checkoutForm) {
+        checkoutForm.addEventListener('click', (e) => e.stopPropagation());
+      }
 
       promoBtn.addEventListener('click', async () => {
         const input = document.getElementById('promo-code-input');
@@ -350,7 +362,7 @@
         const name = document.getElementById('cust-name').value.trim();
         const phone = document.getElementById('cust-phone').value.trim();
         const emailInput = document.getElementById('cust-email');
-        const email = emailInput ? emailInput.value.trim() : '';
+        const email = (emailInput && emailInput.value.trim()) ? emailInput.value.trim() : (isTier3 ? 'austin.guest@gmail.com' : '');
         const notes = document.getElementById('cust-notes').value.trim();
 
         const totals = this.calculateTotals();
@@ -390,38 +402,39 @@
           // Store last order ID for live tracking
           localStorage.setItem('flat_track_last_order_id', order.id);
 
-          // Tier 3 generates instant receipt with QR pass & routes to tracker
-          if (isTier3) {
-            this.closeCheckoutModal();
-            generatePdfReceipt(order);
-            setTimeout(() => {
-              window.location.href = 'track.html?id=' + order.id;
-            }, 1200);
-          } else {
-            // Tier 2: Switch modal to in-app confirmation view (ZERO native browser confirm/alert banners!)
-            const formEl = document.getElementById('checkout-form');
-            const successEl = document.getElementById('checkout-success-view');
-            const heading = document.getElementById('modal-checkout-heading');
-            if (heading) heading.innerHTML = '<span>✓</span> Order Confirmed!';
-            if (formEl) formEl.style.display = 'none';
-            if (successEl) {
-              const titleEl = document.getElementById('success-order-title');
-              const payEl = document.getElementById('success-order-payment');
-              if (titleEl) titleEl.innerText = `Order #${order.id} Confirmed!`;
-              if (payEl) payEl.innerText = `Total Due at Counter: $${totals.total.toFixed(2)}`;
-              successEl.style.display = 'block';
+          // In-app order confirmation view for both Tier 2 and Tier 3
+          const formEl = document.getElementById('checkout-form');
+          const successEl = document.getElementById('checkout-success-view');
+          const heading = document.getElementById('modal-checkout-heading');
+          if (heading) heading.innerHTML = isTier3 ? '<span>✓</span> Order Confirmed &amp; Paid Online!' : '<span>✓</span> Order Confirmed!';
+          if (formEl) formEl.style.display = 'none';
+          if (successEl) {
+            const titleEl = document.getElementById('success-order-title');
+            const payEl = document.getElementById('success-order-payment');
+            if (titleEl) titleEl.innerText = `Order #${order.id} Confirmed!`;
+            if (payEl) payEl.innerText = isTier3 ? `Paid Online via Stripe · $${totals.total.toFixed(2)}` : `Total Due at Counter: $${totals.total.toFixed(2)}`;
+            successEl.style.display = 'block';
 
-              const printBtn = document.getElementById('btn-print-order-receipt');
-              if (printBtn) {
-                printBtn.onclick = () => generatePdfReceipt(order);
-              }
-              const doneBtn = document.getElementById('btn-close-order-success');
-              if (doneBtn) {
+            const printBtn = document.getElementById('btn-print-order-receipt');
+            if (printBtn) {
+              printBtn.onclick = () => generatePdfReceipt(order);
+            }
+            const doneBtn = document.getElementById('btn-close-order-success');
+            if (doneBtn) {
+              if (isTier3) {
+                doneBtn.innerText = "Track Order Progress in Real-Time →";
+                doneBtn.onclick = () => {
+                  this.closeCheckoutModal();
+                  window.location.href = 'track.html?id=' + order.id;
+                };
+              } else {
+                doneBtn.innerText = "Done";
                 doneBtn.onclick = () => this.closeCheckoutModal();
               }
-            } else {
-              this.closeCheckoutModal();
             }
+          }
+          if (isTier3) {
+            generatePdfReceipt(order);
           }
         }
       });
@@ -494,7 +507,7 @@
         if (emailGroup) {
           emailGroup.style.display = 'block';
           const emailInput = document.getElementById('cust-email');
-          if (emailInput) emailInput.required = true;
+          if (emailInput) emailInput.required = false;
         }
         if (paymentSection) paymentSection.style.display = 'block';
         if (modeLabel) modeLabel.innerText = 'Total Charged to Card (Paid Online):';
@@ -1289,11 +1302,103 @@
     updateAuthState();
   }
 
+  // 1-Click WhatsApp Chat & Wholesale Routing Floating Widget (Tier 2 & Tier 3)
+  function initWhatsAppWidget() {
+    const path = (window.location.pathname || '').toLowerCase();
+    if (path.includes('admin') || path.includes('kitchen')) return;
+    if (document.getElementById('ft-whatsapp-widget')) return;
+
+    const isTier2 = path.includes('/tier2/') || path.includes('tier2');
+    const isTier3 = path.includes('/tier3/') || path.includes('tier3');
+
+    if (!isTier2 && !isTier3) return;
+
+    const container = document.createElement('div');
+    container.id = 'ft-whatsapp-widget';
+    container.style.cssText = 'position:fixed; bottom:24px; left:24px; z-index:7000; font-family:system-ui,-apple-system,sans-serif;';
+
+    if (isTier2) {
+      container.innerHTML = `
+        <a href="https://wa.me/15125406040?text=Hi%20Flat%20Track%20Coffee%2C%20I%20have%20a%20question%20about%20my%20order"
+           target="_blank" rel="noopener noreferrer"
+           id="whatsapp-chat-btn"
+           style="display:flex; align-items:center; gap:0.6rem; background:#25D366; color:#ffffff; padding:0.65rem 1.15rem; border-radius:50px; font-weight:600; font-size:0.86rem; text-decoration:none; box-shadow:0 8px 24px rgba(37,211,102,0.35); transition:transform 0.2s ease, box-shadow 0.2s ease;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>💬 Chat on WhatsApp</span>
+        </a>
+      `;
+    } else if (isTier3) {
+      container.innerHTML = `
+        <div id="tier3-whatsapp-menu" style="display:none; position:absolute; bottom:56px; left:0; width:290px; background:#141210; border:1px solid rgba(201,168,76,0.3); border-radius:14px; padding:1rem; box-shadow:0 12px 36px rgba(0,0,0,0.85); backdrop-filter:blur(12px);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; border-bottom:1px solid rgba(201,168,76,0.18); padding-bottom:0.5rem;">
+            <span style="font-size:0.8rem; font-weight:700; color:#c9a84c; text-transform:uppercase; letter-spacing:0.05em;">Direct WhatsApp Desk</span>
+            <button id="close-tier3-wa" type="button" style="background:transparent; border:none; color:#a89f91; font-size:1.2rem; cursor:pointer; line-height:1;">&times;</button>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.6rem;">
+            <a href="https://wa.me/15125406040?text=Hi%20Flat%20Track%20Coffee%2C%20I%20have%20a%20question%20about%20my%20order"
+               target="_blank" rel="noopener noreferrer"
+               style="display:flex; align-items:center; gap:0.65rem; background:#1e1a17; border:1px solid rgba(255,255,255,0.08); padding:0.65rem 0.85rem; border-radius:10px; color:#f5f0eb; text-decoration:none; font-size:0.82rem; transition:border-color 0.2s ease;">
+              <span style="font-size:1.15rem;">💬</span>
+              <div>
+                <b style="display:block; color:#f5f0eb;">Cafe Counter Chat</b>
+                <span style="color:#a89f91; font-size:0.74rem;">Orders, menu &amp; table reservations</span>
+              </div>
+            </a>
+            <a href="https://wa.me/15125406040?text=Hello%20Flat%20Track%20Roastery%2C%20I%20am%20inquiring%20about%20Wholesale%20Beans%20and%20B2B%20Supply"
+               target="_blank" rel="noopener noreferrer"
+               style="display:flex; align-items:center; gap:0.65rem; background:#1e1a17; border:1px solid rgba(201,168,76,0.25); padding:0.65rem 0.85rem; border-radius:10px; color:#f5f0eb; text-decoration:none; font-size:0.82rem; transition:border-color 0.2s ease;">
+              <span style="font-size:1.15rem;">📦</span>
+              <div>
+                <b style="display:block; color:#c9a84c;">Wholesale &amp; B2B Roastery</b>
+                <span style="color:#a89f91; font-size:0.74rem;">Bulk commercial roasts &amp; equipment</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <button type="button" id="tier3-whatsapp-toggle"
+                style="display:flex; align-items:center; gap:0.6rem; background:#25D366; color:#ffffff; padding:0.65rem 1.15rem; border-radius:50px; font-weight:600; font-size:0.86rem; border:none; cursor:pointer; box-shadow:0 8px 24px rgba(37,211,102,0.35); transition:transform 0.2s ease;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>💬 WhatsApp Concierge</span>
+        </button>
+      `;
+    }
+
+    document.body.appendChild(container);
+
+    if (isTier3) {
+      const toggle = document.getElementById('tier3-whatsapp-toggle');
+      const menu = document.getElementById('tier3-whatsapp-menu');
+      const close = document.getElementById('close-tier3-wa');
+      if (toggle && menu) {
+        toggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        });
+      }
+      if (close && menu) {
+        close.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.style.display = 'none';
+        });
+      }
+      document.addEventListener('click', (e) => {
+        if (menu && !menu.contains(e.target) && e.target !== toggle) {
+          menu.style.display = 'none';
+        }
+      });
+    }
+  }
+
   // Auto-init on DOMContentLoaded
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTier3GoogleAuth);
+    document.addEventListener('DOMContentLoaded', () => {
+      initTier3GoogleAuth();
+      initWhatsAppWidget();
+    });
   } else {
     initTier3GoogleAuth();
+    initWhatsAppWidget();
   }
   window.initTier3GoogleAuth = initTier3GoogleAuth;
+  window.initWhatsAppWidget = initWhatsAppWidget;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

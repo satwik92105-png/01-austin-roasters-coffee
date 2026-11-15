@@ -549,7 +549,7 @@ button {
   background: var(--bg-elevated) !important;
   border-left: 1px solid var(--border-medium) !important;
   transform: translateX(100%) !important;
-  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8) !important;
 }
 
@@ -558,6 +558,7 @@ button {
 #cart-drawer.is-open, .cart-drawer.is-open {
   transform: translateX(0) !important;
   right: 0 !important;
+  transition: none !important;
 }
 
 #cart-drawer *, .cart-drawer * {
