@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flat Track Coffee Roasters · Flagship 3D Roastery &amp; Subscriptions</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=21.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=22.0">
 
   <style>
     /* Lenis Smooth Scroll Core Architecture */
@@ -966,8 +966,8 @@
           <p class="showcase-card-notes">Dark Chocolate · Molasses · Candied Pecan</p>
           <p class="showcase-card-desc">Our everyday staple pulling thick golden crema with dense sweetness and zero bitter edge.</p>
           <div class="showcase-card-footer">
-            <span class="showcase-card-price">$19.50</span>
-            <button class="btn btn-primary btn-sm" onclick="CartManager.addItem({id:'dogspeed', name:'Dogspeed Espresso (12oz)', price:19.50, category:'beans'})">Add to Cart 🛒</button>
+            <span class="showcase-card-price" id="showcase-price-dogspeed">$19.50</span>
+            <button class="btn btn-primary btn-sm" id="showcase-btn-dogspeed" onclick="CartManager.addItem({id:'9', name:'Dogspeed Blend Whole Bean (12oz)', price:19.50, category:'beans'})">Add to Cart 🛒</button>
           </div>
         </div>
       </div>
@@ -1191,8 +1191,8 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="../shared/api-client.js?v=21.0"></script>
-  <script src="../shared/components.js?v=21.0"></script>
+  <script src="../shared/api-client.js?v=22.0"></script>
+  <script src="../shared/components.js?v=22.0"></script>
 
   <!-- Lenis + GSAP + Three.js CDNs -->
   <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
@@ -1205,6 +1205,39 @@
       // 1. Austin hours & cart initialization
       if (typeof initAustinTimeBadge === 'function') initAustinTimeBadge('austin-status-badge');
       if (typeof CartManager !== 'undefined') CartManager.init();
+
+      // Dynamic binding for Stage 3 3D Showcase Card (Dogspeed Blend Whole Bean, item #9)
+      async function syncStage3Card() {
+        if (window.FlatTrackAPI) {
+          try {
+            const menu = await window.FlatTrackAPI.getMenu();
+            const item9 = menu.find(i => String(i.id) === '9' || (i.name && i.name.toLowerCase().includes('dogspeed blend')));
+            if (item9) {
+              const priceEl = document.getElementById('showcase-price-dogspeed');
+              if (priceEl) priceEl.innerText = `$${item9.price.toFixed(2)}`;
+              const btnEl = document.getElementById('showcase-btn-dogspeed');
+              if (btnEl) {
+                btnEl.onclick = () => {
+                  CartManager.addItem({
+                    id: String(item9.id),
+                    name: item9.name,
+                    price: item9.price,
+                    category: item9.category || 'beans'
+                  });
+                };
+              }
+            }
+          } catch(e) {}
+        }
+      }
+      syncStage3Card();
+      if (window.FlatTrackAPI && window.FlatTrackAPI.onSync) {
+        window.FlatTrackAPI.onSync((evt) => {
+          if (evt.action === 'menu_update' || evt.action === 'demo_reset') {
+            syncStage3Card();
+          }
+        });
+      }
 
       // 2. Mobile-Aware Lenis Smooth Scroll Configuration
       // Only active on desktop (>=1024px & fine pointer) so mobile touch momentum is 100% native & instant

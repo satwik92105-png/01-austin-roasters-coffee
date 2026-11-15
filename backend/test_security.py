@@ -164,8 +164,10 @@ def test_xss_input_sanitization():
     assert "<img" not in order["notes"]
     assert "&lt;img" in order["notes"]
 
+import uuid
+
 def test_idempotency_key_duplicate_prevention():
-    idempotency_key = "unique-uuid-key-austin-test-999"
+    idempotency_key = f"unique-uuid-key-austin-test-{uuid.uuid4()}"
     headers = {"Idempotency-Key": idempotency_key}
 
     payload = {
@@ -234,3 +236,41 @@ def test_audit_logging_and_pagination():
     assert "action" in first_log
     assert "actor" in first_log
     assert "timestamp_utc" in first_log
+
+def test_menu_upsert_and_id_normalization():
+    admin_headers = {"X-Admin-PIN": "1234"}
+    
+    # 1. Update item #9 using prefixed 'm9' ID
+    res = client.put("/api/menu/m9", json={
+        "name": "Dogspeed Blend Whole Bean (12oz)",
+        "category": "beans",
+        "price": 20.50,
+        "description": "Updated via m9 prefix",
+        "in_stock": True,
+        "customizable": True
+    }, headers=admin_headers)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["id"] == 9
+    assert data["price"] == 20.50
+
+    # 2. Update item #10 using PATCH and string '10'
+    res_patch = client.patch("/api/menu/10", json={
+        "name": "Mexico Oaxaca Pluma Whole Bean (12oz)",
+        "category": "beans",
+        "price": 22.50,
+        "description": "Updated via PATCH",
+        "in_stock": True,
+        "customizable": True
+    }, headers=admin_headers)
+    assert res_patch.status_code == 200
+    assert res_patch.json()["id"] == 10
+    assert res_patch.json()["price"] == 22.50
+
+    # 3. Verify public menu returns 10 items sorted in order
+    menu_res = client.get("/api/menu")
+    assert menu_res.status_code == 200
+    menu = menu_res.json()
+    assert len(menu) >= 10
+    ids = [item["id"] for item in menu[:10]]
+    assert ids == list(range(1, 11))

@@ -1496,3 +1496,12 @@ header *, .header-glass *, .navbar * {
 #auth-modal-overlay, .modal-overlay {
   z-index: 1000001 !important;
 }
+
+#checkout-modal-overlay, #checkout-modal, #checkout-modal *, #checkout-form, #checkout-form * {
+  pointer-events: auto !important;
+}
+
+#checkout-modal {
+  position: relative !important;
+  z-index: 1000005 !important;
+}

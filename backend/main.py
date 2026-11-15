@@ -188,19 +188,34 @@ def startup_populate():
             db.add(admin)
             db.commit()
 
-        # Seed initial menu if empty
-        if db.query(MenuItemModel).filter(MenuItemModel.is_deleted == False).count() == 0:
-            seed_items = [
-                ("Dogspeed Espresso Double", "espresso", 4.50, "Double-pulled Dogspeed blend. Rich dark cacao, candied citrus, dense persistent crema.", "Roaster's Pick", "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80", True),
-                ("Flat Track Classic Cortado", "espresso", 5.00, "Equal parts double espresso and silky steamed milk. Balanced, intensely aromatic.", "Local Favorite", "https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&auto=format&fit=crop&q=80", True),
-                ("Bourbon Smoked Vanilla Latte", "specialty", 6.75, "House-made Madagascar vanilla syrup infused with oak barrel smoke and espresso.", "Seasonal Release", "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&auto=format&fit=crop&q=80", True),
-                ("Single-Origin Ethiopian Pour-Over", "pourover", 6.50, "Yirgacheffe natural process. Vibrant bergamot, ripe blackberry, and honeysuckle finish.", "Micro-Lot", "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&auto=format&fit=crop&q=80", False),
-                ("East Austin Flash Brew Iced", "cold", 5.50, "Brewed hot directly over ice to preserve volatile aromatics. Crisp citrus brightness.", "Summer Essential", "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop&q=80", True),
-                ("Artisan Butter Croissant", "bakery", 4.50, "Baked fresh daily by Swedish Hill. 48 laminated butter layers, golden flaky crust.", "Fresh Daily", "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop&q=80", False),
-                ("Dogspeed Blend Whole Bean (12oz)", "beans", 19.50, "Our flagship medium-dark roast. Tasting notes of dark chocolate, toasted pecan, and dried fig.", "Signature Beans", "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?w=600&auto=format&fit=crop&q=80", False)
-            ]
-            for name, cat, pr, desc, bg, img, cust in seed_items:
-                db.add(MenuItemModel(name=name, category=cat, price=pr, description=desc, badge=bg, image=img, customizable=cust, in_stock=True, is_deleted=False))
+        # Seed or sync initial canonical 10-item menu if empty or missing items
+        canonical_items = [
+            (1, "Dogspeed Espresso Double", "espresso", 4.50, "Double-pulled Dogspeed blend. Rich dark cacao, candied citrus, dense persistent crema. The house signature.", "Roaster's Pick", "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80", True),
+            (2, "Flat Track Classic Cortado", "espresso", 5.00, "Equal parts double espresso and silky steamed oat or whole milk. Balanced, intensely aromatic.", "Local Favorite", "https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&auto=format&fit=crop&q=80", True),
+            (3, "Bourbon Smoked Vanilla Latte", "specialty", 6.75, "House-made Madagascar vanilla syrup infused with oak barrel smoke and espresso, topped with raw turbinado sugar.", "Seasonal Release", "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&auto=format&fit=crop&q=80", True),
+            (4, "Single-Origin Ethiopian Pour-Over", "pourover", 6.50, "Yirgacheffe natural process. Vibrant bergamot, ripe blackberry, and delicate honeysuckle finish.", "Micro-Lot", "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&auto=format&fit=crop&q=80", True),
+            (5, "East Austin Flash Brew Iced", "cold", 5.50, "Brewed hot directly over ice to preserve volatile aromatics. Crisp citrus brightness, ultra-refreshing.", "Summer Essential", "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop&q=80", True),
+            (6, "Slow-Steeped Cold Brew Float", "cold", 7.00, "20-hour steeped Dogspeed cold brew poured over local Sweet Ritual Madagascar vanilla ice cream.", "Indulgent", "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop&q=80", True),
+            (7, "Artisan Butter Croissant", "bakery", 4.50, "Baked fresh daily by Swedish Hill. 48 laminated butter layers, golden flaky crust, soft honeycomb interior.", "Fresh Daily", "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop&q=80", True),
+            (8, "Rosemary & Gruyère Savory Scone", "bakery", 4.75, "Infused with fresh garden rosemary and melted aged Swiss Gruyère. Warm, buttery, and fragrant.", "Baker's Choice", "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80", True),
+            (9, "Dogspeed Blend Whole Bean (12oz)", "beans", 19.50, "Our signature espresso blend (Washed Colombia & Natural Ethiopia). Dark cocoa, sweet plum, and velvety mouthfeel.", "Signature Roast", "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?w=600&auto=format&fit=crop&q=80", True),
+            (10, "Mexico Oaxaca Pluma Whole Bean (12oz)", "beans", 21.00, "Washed process micro-lot from Pluma Hidalgo. Milk chocolate, crisp green apple, and raw sugar cane sweetness.", "Direct Trade", "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&auto=format&fit=crop&q=80", True)
+        ]
+        if db.query(MenuItemModel).filter(MenuItemModel.is_deleted == False).count() < 10:
+            for item_id, name, cat, pr, desc, bg, img, cust in canonical_items:
+                existing = db.query(MenuItemModel).filter(MenuItemModel.id == item_id).first()
+                if not existing:
+                    db.add(MenuItemModel(id=item_id, name=name, category=cat, price=pr, description=desc, badge=bg, image=img, customizable=cust, in_stock=True, is_deleted=False))
+                else:
+                    existing.name = name
+                    existing.category = cat
+                    existing.price = pr
+                    existing.description = desc
+                    existing.badge = bg
+                    existing.image = img
+                    existing.customizable = cust
+                    existing.in_stock = True
+                    existing.is_deleted = False
             db.commit()
     finally:
         db.close()
@@ -300,8 +315,8 @@ def google_oauth(data: dict, db: Session = Depends(get_db)):
 @app.get("/api/menu")
 @app.get("/api/v1/menu")
 def get_menu(db: Session = Depends(get_db)):
-    # Soft deletes: only return items where is_deleted == False
-    items = db.query(MenuItemModel).filter(MenuItemModel.is_deleted == False).all()
+    # Soft deletes: only return items where is_deleted == False, ordered by id
+    items = db.query(MenuItemModel).filter(MenuItemModel.is_deleted == False).order_by(MenuItemModel.id.asc()).all()
     return [
         {
             "id": i.id, "name": i.name, "category": i.category,
@@ -346,26 +361,52 @@ def create_menu_item(req: MenuItemCreate, request: Request, db: Session = Depend
 @app.put("/menu/{item_id}", dependencies=[Depends(require_admin)])
 @app.put("/api/menu/{item_id}", dependencies=[Depends(require_admin)])
 @app.put("/api/v1/menu/{item_id}", dependencies=[Depends(require_admin)])
-def update_menu_item(item_id: int, req: MenuItemCreate, request: Request, db: Session = Depends(get_db)):
-    item = db.query(MenuItemModel).filter(MenuItemModel.id == item_id).first()
-    if not item or item.is_deleted:
-        raise HTTPException(status_code=404, detail="Item not found")
+@app.patch("/menu/{item_id}", dependencies=[Depends(require_admin)])
+@app.patch("/api/menu/{item_id}", dependencies=[Depends(require_admin)])
+@app.patch("/api/v1/menu/{item_id}", dependencies=[Depends(require_admin)])
+def update_menu_item(item_id: Union[int, str], req: MenuItemCreate, request: Request, db: Session = Depends(get_db)):
+    try:
+        clean_id = int(str(item_id).lower().replace("ft-m", "").replace("m", "").strip())
+    except Exception:
+        clean_id = 1
 
-    item.name = sanitize_str(req.name)
-    item.category = sanitize_str(req.category)
-    item.price = round(req.price, 2)
-    item.description = sanitize_str(req.description)
-    item.badge = sanitize_str(req.badge) if req.badge else None
-    item.image = req.image or item.image
+    item = db.query(MenuItemModel).filter(MenuItemModel.id == clean_id).first()
     val = req.inStock if req.inStock is not None else req.in_stock
-    if val is not None:
-        item.in_stock = val
-    item.customizable = bool(req.customizable)
+    in_st = val if val is not None else True
+
+    if not item:
+        # UPSERT: Item does not exist, insert with normalized clean_id
+        item = MenuItemModel(
+            id=clean_id,
+            name=sanitize_str(req.name),
+            category=sanitize_str(req.category),
+            price=round(req.price, 2),
+            description=sanitize_str(req.description),
+            badge=sanitize_str(req.badge) if req.badge else None,
+            image=req.image or "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80",
+            in_stock=in_st,
+            customizable=bool(req.customizable),
+            is_deleted=False
+        )
+        db.add(item)
+    else:
+        # Update existing
+        item.name = sanitize_str(req.name)
+        item.category = sanitize_str(req.category)
+        item.price = round(req.price, 2)
+        item.description = sanitize_str(req.description)
+        item.badge = sanitize_str(req.badge) if req.badge else None
+        if req.image:
+            item.image = req.image
+        if val is not None:
+            item.in_stock = val
+        item.customizable = bool(req.customizable)
+        item.is_deleted = False
 
     db.commit()
     db.refresh(item)
 
-    log_audit(db, actor="admin", action="UPDATE_MENU_ITEM", resource_type="menu_item", resource_id=str(item.id), ip_address=get_client_ip(request), details=f"Updated {item.name}")
+    log_audit(db, actor="admin", action="UPSERT_MENU_ITEM", resource_type="menu_item", resource_id=str(item.id), ip_address=get_client_ip(request), details=f"Upserted {item.name} at ${item.price:.2f}")
 
     return {
         "id": item.id, "name": item.name, "category": item.category,
@@ -377,10 +418,13 @@ def update_menu_item(item_id: int, req: MenuItemCreate, request: Request, db: Se
 @app.put("/menu", dependencies=[Depends(require_admin)])
 @app.put("/api/menu", dependencies=[Depends(require_admin)])
 @app.put("/api/v1/menu", dependencies=[Depends(require_admin)])
+@app.patch("/menu", dependencies=[Depends(require_admin)])
+@app.patch("/api/menu", dependencies=[Depends(require_admin)])
+@app.patch("/api/v1/menu", dependencies=[Depends(require_admin)])
 def update_menu_item_body(req: MenuItemCreate, request: Request, db: Session = Depends(get_db)):
     item_id = getattr(req, "id", None)
     if item_id:
-        return update_menu_item(int(item_id), req, request, db)
+        return update_menu_item(item_id, req, request, db)
     return create_menu_item(req, request, db)
 
 @app.delete("/menu/{item_id}", dependencies=[Depends(require_admin)])

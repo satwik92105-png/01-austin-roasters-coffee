@@ -14,7 +14,8 @@ from test_security import (
     test_xss_input_sanitization,
     test_idempotency_key_duplicate_prevention,
     test_kds_role_authorization,
-    test_audit_logging_and_pagination
+    test_audit_logging_and_pagination,
+    test_menu_upsert_and_id_normalization
 )
 
 tests = [
@@ -27,7 +28,8 @@ tests = [
     ("test_xss_input_sanitization", test_xss_input_sanitization),
     ("test_idempotency_key_duplicate_prevention", test_idempotency_key_duplicate_prevention),
     ("test_kds_role_authorization", test_kds_role_authorization),
-    ("test_audit_logging_and_pagination", test_audit_logging_and_pagination)
+    ("test_audit_logging_and_pagination", test_audit_logging_and_pagination),
+    ("test_menu_upsert_and_id_normalization", test_menu_upsert_and_id_normalization)
 ]
 
 print("=== RUNNING FASTAPI SECURITY & ROLE VERIFICATION TESTS ===")

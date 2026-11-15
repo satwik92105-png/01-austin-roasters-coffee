@@ -7,7 +7,7 @@
 (function (window) {
   const API_BASE = window.FLAT_TRACK_API_URL || "https://01-austin-roasters-coffee.vercel.app/api";
   const CHANNEL_NAME = 'flat_track_live_sync';
-  const STORAGE_KEY = 'flattrack_prod_v6';
+  const STORAGE_KEY = 'flattrack_prod_v22';
 
   // Immediate startup cache wipe of any legacy mock keys
   try {
@@ -16,6 +16,7 @@
       'flat_track_coffee_v4', 'flat_track_coffee_v5', 'flat_track_roasters_data_v3',
       'flat_track_roasters_data_v4', 'flattrack_clean_v4',
       'flattrack_prod_v1', 'flattrack_prod_v2', 'flattrack_prod_v3', 'flattrack_prod_v4', 'flattrack_prod_v5',
+      'flattrack_prod_v6', 'flattrack_prod_v7', 'flattrack_prod_v19', 'flattrack_prod_v20', 'flattrack_prod_v21',
       'flattrack_db_v3', 'flat_track_orders', 'flat_track_reservations'
     ];
     legacyKeys.forEach(k => {
@@ -276,29 +277,48 @@
       // Bi-directional merge so owner edits in POS and local state persist
       const mergedMap = new Map();
       
+      const getCleanId = (rawId) => {
+        const num = parseInt(String(rawId).replace(/[^0-9]/g, ''), 10);
+        return isNaN(num) ? String(rawId) : num;
+      };
+
       // 1. ALWAYS initialize baseline from INITIAL_MENU so items are 100% NEVER empty
-      INITIAL_MENU.forEach(m => mergedMap.set(String(m.id), { ...m, customizable: true, inStock: true, in_stock: true }));
+      INITIAL_MENU.forEach(m => {
+        const id = getCleanId(m.id);
+        mergedMap.set(String(id), { ...m, id, customizable: true, inStock: true, in_stock: true });
+      });
 
       // 2. Blend in backend items if available
       if (Array.isArray(backendItems) && backendItems.length > 0) {
         backendItems.forEach(m => {
-          const existing = mergedMap.get(String(m.id));
-          mergedMap.set(String(m.id), { ...existing, ...m });
+          const id = getCleanId(m.id);
+          const existing = mergedMap.get(String(id));
+          mergedMap.set(String(id), { ...existing, ...m, id });
         });
       }
 
       // 3. Blend in local state edits
       if (Array.isArray(state.menu) && state.menu.length > 0) {
         state.menu.forEach(m => {
-          const existing = mergedMap.get(String(m.id));
-          mergedMap.set(String(m.id), { ...existing, ...m });
+          const id = getCleanId(m.id);
+          const existing = mergedMap.get(String(id));
+          mergedMap.set(String(id), { ...existing, ...m, id });
         });
       }
 
-      const normalized = Array.from(mergedMap.values()).map(m => {
-        const inSt = m.inStock !== undefined ? Boolean(m.inStock) : (m.in_stock !== undefined ? Boolean(m.in_stock) : true);
-        return { ...m, inStock: inSt, in_stock: inSt, customizable: true };
-      });
+      // Filter out any legacy obsolete/duplicate items (e.g. High-Octane Cold Brew, Cortado 1:1 Ratio)
+      const normalized = Array.from(mergedMap.values())
+        .filter(m => {
+          if (!m.name) return false;
+          const lower = m.name.toLowerCase();
+          if (lower.includes('high-octane cold brew') || lower.includes('cortado (1:1 ratio)')) return false;
+          return true;
+        })
+        .map(m => {
+          const inSt = m.inStock !== undefined ? Boolean(m.inStock) : (m.in_stock !== undefined ? Boolean(m.in_stock) : true);
+          return { ...m, inStock: inSt, in_stock: inSt, customizable: true };
+        })
+        .sort((a, b) => (parseInt(a.id, 10) || 0) - (parseInt(b.id, 10) || 0));
 
       state.menu = normalized;
       saveState(state);
@@ -306,6 +326,8 @@
     },
 
     async saveMenuItem(item) {
+      const numId = parseInt(String(item.id).replace(/[^0-9]/g, ''), 10);
+      const cleanId = isNaN(numId) ? (item.id || Date.now()) : numId;
       const cleanItem = {
         name: item.name,
         category: item.category,
@@ -320,12 +342,12 @@
 
       let serverResult = null;
       try {
-        const url = item.id ? `${API_BASE}/menu/${item.id}` : `${API_BASE}/menu`;
-        const method = item.id ? 'PUT' : 'POST';
+        const url = cleanId ? `${API_BASE}/menu/${cleanId}` : `${API_BASE}/menu`;
+        const method = cleanId ? 'PUT' : 'POST';
         const res = await fetch(url, {
           method: method,
           headers: this.getAdminHeaders(),
-          body: JSON.stringify({ ...cleanItem, id: item.id ? parseInt(item.id, 10) : undefined }),
+          body: JSON.stringify({ ...cleanItem, id: cleanId }),
           signal: AbortSignal.timeout(4500)
         });
         if (res.ok) {
@@ -339,15 +361,16 @@
       const state = loadState();
       const savedItem = (serverResult && typeof serverResult === 'object' && !Array.isArray(serverResult) && serverResult.name) ? {
         ...serverResult,
+        id: serverResult.id ? (parseInt(String(serverResult.id).replace(/[^0-9]/g, ''), 10) || serverResult.id) : cleanId,
         inStock: serverResult.in_stock !== undefined ? serverResult.in_stock : serverResult.inStock,
         in_stock: serverResult.in_stock !== undefined ? serverResult.in_stock : serverResult.inStock
       } : {
         ...cleanItem,
-        id: item.id ? (parseInt(item.id, 10) || item.id) : Date.now()
+        id: cleanId
       };
 
-      if (item.id) {
-        const idx = state.menu.findIndex(m => String(m.id) === String(item.id));
+      if (cleanId) {
+        const idx = state.menu.findIndex(m => String(m.id) === String(cleanId));
         if (idx !== -1) {
           state.menu[idx] = { ...state.menu[idx], ...savedItem };
         } else {

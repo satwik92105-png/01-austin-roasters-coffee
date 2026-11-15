@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Owner POS & Operations Portal — Flat Track Roasters</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=21.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=22.0">
   <style>
     body {
       background-color: #0c0a09;
@@ -298,8 +298,8 @@
     </div>
   </div>
 
-  <script src="../shared/api-client.js?v=21.0"></script>
-  <script src="../shared/components.js?v=21.0"></script>
+  <script src="../shared/api-client.js?v=22.0"></script>
+  <script src="../shared/components.js?v=22.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       initDemoControls({ tier: 'tier2', isAdmin: true });
@@ -472,8 +472,8 @@
             </td>
             <td>
               <div style="display:flex; gap:0.4rem;">
-                <button class="btn btn-secondary btn-sm" onclick="openEditProductModal(${item.id})">Edit</button>
-                <button class="btn btn-secondary btn-sm" style="color:#ef4444;" onclick="deleteProduct(${item.id})">Delete</button>
+                <button class="btn btn-secondary btn-sm" onclick="openEditProductModal('${item.id}')">Edit</button>
+                <button class="btn btn-secondary btn-sm" style="color:#ef4444;" onclick="deleteProduct('${item.id}')">Delete</button>
               </div>
             </td>
           </tr>
@@ -516,7 +516,7 @@
 
       window.openEditProductModal = async function(id) {
         const menu = await window.FlatTrackAPI.getMenu();
-        const item = menu.find(i => i.id === id);
+        const item = menu.find(i => String(i.id) === String(id));
         if (!item) return;
 
         document.getElementById('prod-id').value = item.id;

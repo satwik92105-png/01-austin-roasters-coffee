@@ -18,6 +18,10 @@
     return false;
   };
 
+  // Global Checkout Modal State Flags (Prevents accidental outside-click / focus close)
+  window.__checkoutModalOpen = false;
+  window.__allowExplicitCheckoutClose = false;
+
   // Global Toast Manager
   function showToast(message, type = 'info', duration = 3500) {
     let container = document.getElementById('global-toast-container');
@@ -192,14 +196,15 @@
         </div>
 
         <!-- Checkout / Pickup Modal -->
-        <div class="modal-overlay" id="checkout-modal-overlay">
-          <div class="modal-card" data-lenis-prevent onclick="event.stopPropagation()">
-            <div class="modal-header">
+        <div class="modal-overlay" id="checkout-modal-overlay" data-lenis-prevent>
+          <div class="modal-card" id="checkout-modal" data-lenis-prevent onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" onpointerdown="event.stopPropagation()">
+            <div class="modal-header" onclick="event.stopPropagation()">
               <h3 id="modal-checkout-heading"><span>☕</span> Complete Pickup Order</h3>
-              <button class="modal-close-btn" id="checkout-modal-close" type="button">&times;</button>
+              <button class="modal-close-btn" id="checkout-close-btn" type="button" aria-label="Close Checkout">&times;</button>
+              <button class="modal-close-btn" id="checkout-modal-close" type="button" aria-label="Close Checkout" style="display:none;">&times;</button>
             </div>
-            <div class="modal-body" onclick="event.stopPropagation()">
-              <form id="checkout-form" onclick="event.stopPropagation()">
+            <div class="modal-body" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" onpointerdown="event.stopPropagation()">
+              <form id="checkout-form" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" onpointerdown="event.stopPropagation()">
                 <div class="form-group">
                   <label class="form-label">Full Name *</label>
                   <input type="text" id="cust-name" class="form-input" required placeholder="Your Full Name">
@@ -295,6 +300,7 @@
       const checkoutBtn = document.getElementById('checkout-drawer-btn');
       const modalOverlay = document.getElementById('checkout-modal-overlay');
       const modalClose = document.getElementById('checkout-modal-close');
+      const checkoutCloseBtn = document.getElementById('checkout-close-btn');
       const checkoutForm = document.getElementById('checkout-form');
       const promoBtn = document.getElementById('apply-promo-btn');
 
@@ -311,21 +317,32 @@
         this.openCheckoutModal();
       });
 
-      modalClose.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      // Explicit Close Handlers (ONLY × close button or Done button can close checkout modal)
+      const handleExplicitClose = (e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        window.__allowExplicitCheckoutClose = true;
         this.closeCheckoutModal();
-      });
-      modalOverlay.addEventListener('click', (e) => {
-        if (e.target !== modalOverlay || e.target !== e.currentTarget) return;
-        this.closeCheckoutModal();
-      });
-      const modalCard = modalOverlay.querySelector('.modal-card');
+      };
+
+      if (modalClose) modalClose.addEventListener('click', handleExplicitClose);
+      if (checkoutCloseBtn) checkoutCloseBtn.addEventListener('click', handleExplicitClose);
+
+      // CRITICAL: DISABLE ALL BACKDROP / OUTSIDE-CLICK AUTO-CLOSING ON #checkout-modal
+      // In a checkout / payment modal, clicking the background or clicking input fields must NEVER close the modal!
+
+      const modalCard = modalOverlay ? modalOverlay.querySelector('.modal-card') : null;
       if (modalCard) {
         modalCard.addEventListener('click', (e) => e.stopPropagation());
+        modalCard.addEventListener('mousedown', (e) => e.stopPropagation());
+        modalCard.addEventListener('pointerdown', (e) => e.stopPropagation());
       }
       if (checkoutForm) {
         checkoutForm.addEventListener('click', (e) => e.stopPropagation());
+        checkoutForm.addEventListener('mousedown', (e) => e.stopPropagation());
+        checkoutForm.addEventListener('pointerdown', (e) => e.stopPropagation());
       }
 
       promoBtn.addEventListener('click', async () => {
@@ -423,13 +440,25 @@
             if (doneBtn) {
               if (isTier3) {
                 doneBtn.innerText = "Track Order Progress in Real-Time →";
-                doneBtn.onclick = () => {
+                doneBtn.onclick = (e) => {
+                  if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                  window.__allowExplicitCheckoutClose = true;
                   this.closeCheckoutModal();
                   window.location.href = 'track.html?id=' + order.id;
                 };
               } else {
                 doneBtn.innerText = "Done";
-                doneBtn.onclick = () => this.closeCheckoutModal();
+                doneBtn.onclick = (e) => {
+                  if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                  window.__allowExplicitCheckoutClose = true;
+                  this.closeCheckoutModal();
+                };
               }
             }
           }
@@ -452,6 +481,10 @@
     },
 
     closeDrawer() {
+      // If checkout modal is open, do not trigger any drawer-close logic that might close checkout modal
+      if (window.__checkoutModalOpen && !window.__allowExplicitCheckoutClose) {
+        return;
+      }
       const overlay = document.getElementById('cart-drawer-overlay');
       const drawer = document.getElementById('cart-drawer');
       if (overlay) overlay.classList.remove('is-open', 'open', 'active');
@@ -463,6 +496,14 @@
     },
 
     openCheckoutModal() {
+      window.__checkoutModalOpen = true;
+      window.__allowExplicitCheckoutClose = false;
+
+      // Stop Lenis smooth scroll while checkout modal is open so wheel/pointer is 100% native
+      if (window.lenis && typeof window.lenis.stop === 'function') {
+        try { window.lenis.stop(); } catch(e){}
+      }
+
       const isTier3 = window.location.pathname.includes('/tier3/');
       const formEl = document.getElementById('checkout-form');
       const successEl = document.getElementById('checkout-success-view');
@@ -531,8 +572,22 @@
     },
 
     closeCheckoutModal() {
-      document.getElementById('checkout-modal-overlay').classList.remove('is-open');
-      document.getElementById('floating-cart-trigger').classList.remove('is-hidden');
+      // Never close checkout modal from outside-click, drawer-close, or input click events
+      if (window.__checkoutModalOpen && !window.__allowExplicitCheckoutClose) {
+        return;
+      }
+      window.__checkoutModalOpen = false;
+      window.__allowExplicitCheckoutClose = false;
+
+      // Resume Lenis smooth scroll when modal explicitly closes
+      if (window.lenis && typeof window.lenis.start === 'function') {
+        try { window.lenis.start(); } catch(e){}
+      }
+
+      const overlay = document.getElementById('checkout-modal-overlay');
+      if (overlay) overlay.classList.remove('is-open');
+      const trigger = document.getElementById('floating-cart-trigger');
+      if (trigger) trigger.classList.remove('is-hidden');
       const formEl = document.getElementById('checkout-form');
       const successEl = document.getElementById('checkout-success-view');
       if (formEl) formEl.style.display = 'block';

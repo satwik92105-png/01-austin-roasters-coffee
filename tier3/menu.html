@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Ahead — Flat Track Coffee Roasters (Flagship)</title>
-  <link rel="stylesheet" href="../shared/styles.css?v=21.0">
+  <link rel="stylesheet" href="../shared/styles.css?v=22.0">
   <style>
     .menu-header-bar {
       padding: 3.5rem 0 2rem 0;
@@ -168,6 +168,7 @@
           <button class="btn btn-secondary btn-sm active" data-cat="all">All</button>
           <button class="btn btn-secondary btn-sm" data-cat="espresso">☕ Espresso</button>
           <button class="btn btn-secondary btn-sm" data-cat="specialty">✨ Specialties</button>
+          <button class="btn btn-secondary btn-sm" data-cat="pourover">🫗 Pour-Over</button>
           <button class="btn btn-secondary btn-sm" data-cat="cold">🧊 Cold Brew</button>
           <button class="btn btn-secondary btn-sm" data-cat="bakery">🥐 Bakery</button>
           <button class="btn btn-secondary btn-sm" data-cat="beans">🫘 Beans (12oz)</button>
@@ -190,6 +191,11 @@
           <div class="card-body">
             <h3 class="card-title">Dogspeed Espresso Double</h3>
             <p class="card-desc">Double-pulled Dogspeed blend. Rich dark cacao, candied citrus, dense persistent crema. The house signature.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●●●○</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●●</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●○</b></span>
+            </div>
             <div class="card-footer">
               <span class="card-price mono-num">$4.50</span>
               <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('1')">
@@ -199,16 +205,21 @@
           </div>
         </div>
 
-        <div class="product-card" data-category="cold">
+        <div class="product-card" data-category="espresso">
           <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop&q=80" alt="High-Octane Cold Brew" loading="lazy">
-            <span class="card-badge">Best Seller</span>
+            <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&auto=format&fit=crop&q=80" alt="Flat Track Classic Cortado" loading="lazy">
+            <span class="card-badge">Local Favorite</span>
           </div>
           <div class="card-body">
-            <h3 class="card-title">High-Octane Cold Brew</h3>
-            <p class="card-desc">Steeped 20 hours cold-drip method. Ultra smooth, chocolatey undertones, zero bitterness. High caffeine.</p>
+            <h3 class="card-title">Flat Track Classic Cortado</h3>
+            <p class="card-desc">Equal parts double espresso and silky steamed oat or whole milk. Balanced, intensely aromatic.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●●○○</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●●</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●○</b></span>
+            </div>
             <div class="card-footer">
-              <span class="card-price mono-num">$5.50</span>
+              <span class="card-price mono-num">$5.00</span>
               <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('2')">
                 Customize &plus;
               </button>
@@ -216,17 +227,44 @@
           </div>
         </div>
 
-        <div class="product-card" data-category="espresso">
+        <div class="product-card" data-category="specialty">
           <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&auto=format&fit=crop&q=80" alt="Cortado (1:1 Ratio)" loading="lazy">
-            <span class="card-badge">Barista Favorite</span>
+            <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&auto=format&fit=crop&q=80" alt="Bourbon Smoked Vanilla Latte" loading="lazy">
+            <span class="card-badge">Seasonal Release</span>
           </div>
           <div class="card-body">
-            <h3 class="card-title">Cortado (1:1 Ratio)</h3>
-            <p class="card-desc">Equal parts espresso and warm velvety steamed whole milk in an authentic Gibraltar glass.</p>
+            <h3 class="card-title">Bourbon Smoked Vanilla Latte</h3>
+            <p class="card-desc">House-made Madagascar vanilla syrup infused with oak barrel smoke and espresso, topped with raw turbinado sugar.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●○○○</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●●</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●●</b></span>
+            </div>
             <div class="card-footer">
-              <span class="card-price mono-num">$4.75</span>
+              <span class="card-price mono-num">$6.75</span>
               <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('3')">
+                Customize &plus;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="pourover">
+          <div class="product-image-wrap">
+            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&auto=format&fit=crop&q=80" alt="Single-Origin Ethiopian Pour-Over" loading="lazy">
+            <span class="card-badge">Micro-Lot</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Single-Origin Ethiopian Pour-Over</h3>
+            <p class="card-desc">Yirgacheffe natural process. Vibrant bergamot, ripe blackberry, and delicate honeysuckle finish.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●●●●</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●○○</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●○</b></span>
+            </div>
+            <div class="card-footer">
+              <span class="card-price mono-num">$6.50</span>
+              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('4')">
                 Customize &plus;
               </button>
             </div>
@@ -235,31 +273,19 @@
 
         <div class="product-card" data-category="cold">
           <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop&q=80" alt="Flat Track Nitro Draft" loading="lazy">
-            <span class="card-badge">On Tap</span>
+            <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop&q=80" alt="East Austin Flash Brew Iced" loading="lazy">
+            <span class="card-badge">Summer Essential</span>
           </div>
           <div class="card-body">
-            <h3 class="card-title">Flat Track Nitro Draft</h3>
-            <p class="card-desc">Dogspeed cold brew infused with food-grade nitrogen on tap. Velvety stout-like cascading head.</p>
-            <div class="card-footer">
-              <span class="card-price mono-num">$6.00</span>
-              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('4')">
-                Customize &plus;
-              </button>
+            <h3 class="card-title">East Austin Flash Brew Iced</h3>
+            <p class="card-desc">Brewed hot directly over ice to preserve volatile aromatics. Crisp citrus brightness, ultra-refreshing.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●●●○</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●○</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●○○</b></span>
             </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="espresso">
-          <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&auto=format&fit=crop&q=80" alt="House Batch Drip (Dogspeed Roast)" loading="lazy">
-            <span class="card-badge">Daily Brew</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">House Batch Drip (Dogspeed Roast)</h3>
-            <p class="card-desc">Precision batch brewed on Marco jet brewer. Clean, vibrant, perfect everyday cup.</p>
             <div class="card-footer">
-              <span class="card-price mono-num">$3.75</span>
+              <span class="card-price mono-num">$5.50</span>
               <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('5')">
                 Customize &plus;
               </button>
@@ -267,68 +293,22 @@
           </div>
         </div>
 
-        <div class="product-card" data-category="specialty">
+        <div class="product-card" data-category="cold">
           <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop&q=80" alt="Austin Amber Horchata Latte" loading="lazy">
-            <span class="card-badge">House Specialty</span>
+            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop&q=80" alt="Slow-Steeped Cold Brew Float" loading="lazy">
+            <span class="card-badge">Indulgent</span>
           </div>
           <div class="card-body">
-            <h3 class="card-title">Austin Amber Horchata Latte</h3>
-            <p class="card-desc">House-made rice and almond horchata, Madagascar cinnamon, vanilla bean syrup, espresso double.</p>
+            <h3 class="card-title">Slow-Steeped Cold Brew Float</h3>
+            <p class="card-desc">20-hour steeped Dogspeed cold brew poured over local Sweet Ritual Madagascar vanilla ice cream.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●○○○</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●●</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●●</b></span>
+            </div>
             <div class="card-footer">
-              <span class="card-price mono-num">$6.50</span>
+              <span class="card-price mono-num">$7.00</span>
               <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('6')">
-                Customize &plus;
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="beans">
-          <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1587734195503-904fca47e0e9?w=600&auto=format&fit=crop&q=80" alt="Dogspeed Whole Bean Blend (12oz)" loading="lazy">
-            <span class="card-badge">Fresh Roasted</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">Dogspeed Whole Bean Blend (12oz)</h3>
-            <p class="card-desc">Our flagship roast. Washed Colombian & natural Ethiopian blend. Tasting notes: Dark chocolate, cherry, toasted almond.</p>
-            <div class="card-footer">
-              <span class="card-price mono-num">$19.00</span>
-              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('7')">
-                Customize &plus;
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="beans">
-          <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?w=600&auto=format&fit=crop&q=80" alt="Single Origin Ethiopian Yirgacheffe (12oz)" loading="lazy">
-            <span class="card-badge">Limited Lot</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">Single Origin Ethiopian Yirgacheffe (12oz)</h3>
-            <p class="card-desc">Light roasted heirloom varietals. Floral jasmine aroma, bergamot tea sweetness, Meyer lemon finish.</p>
-            <div class="card-footer">
-              <span class="card-price mono-num">$22.00</span>
-              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('8')">
-                Customize &plus;
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="specialty">
-          <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=600&auto=format&fit=crop&q=80" alt="Moto-Matcha Lavender Tonic" loading="lazy">
-            <span class="card-badge">Seasonal</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title">Moto-Matcha Lavender Tonic</h3>
-            <p class="card-desc">Ceremonial grade Uji matcha, culinary lavender reduction, fever tree tonic, fresh lime slice.</p>
-            <div class="card-footer">
-              <span class="card-price mono-num">$6.25</span>
-              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('9')">
                 Customize &plus;
               </button>
             </div>
@@ -337,14 +317,75 @@
 
         <div class="product-card" data-category="bakery">
           <div class="product-image-wrap">
-            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80" alt="Hill Country Cardamom Bun" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop&q=80" alt="Artisan Butter Croissant" loading="lazy">
             <span class="card-badge">Fresh Daily</span>
           </div>
           <div class="card-body">
-            <h3 class="card-title">Hill Country Cardamom Bun</h3>
-            <p class="card-desc">Twisted Swedish-style bun with freshly crushed green cardamom, pearl sugar crystal crust.</p>
+            <h3 class="card-title">Artisan Butter Croissant</h3>
+            <p class="card-desc">Baked fresh daily by Swedish Hill. 48 laminated butter layers, golden flaky crust, soft honeycomb interior.</p>
             <div class="card-footer">
-              <span class="card-price mono-num">$5.00</span>
+              <span class="card-price mono-num">$4.50</span>
+              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('7')">
+                Customize &plus;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="bakery">
+          <div class="product-image-wrap">
+            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80" alt="Rosemary & Gruyère Savory Scone" loading="lazy">
+            <span class="card-badge">Baker's Choice</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Rosemary & Gruyère Savory Scone</h3>
+            <p class="card-desc">Infused with fresh garden rosemary and melted aged Swiss Gruyère. Warm, buttery, and fragrant.</p>
+            <div class="card-footer">
+              <span class="card-price mono-num">$4.75</span>
+              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('8')">
+                Customize &plus;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="beans">
+          <div class="product-image-wrap">
+            <img src="https://images.unsplash.com/photo-1587734195503-904fca47e0e9?w=600&auto=format&fit=crop&q=80" alt="Dogspeed Blend Whole Bean (12oz)" loading="lazy">
+            <span class="card-badge">Signature Roast</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Dogspeed Blend Whole Bean (12oz)</h3>
+            <p class="card-desc">Our signature espresso blend (Washed Colombia & Natural Ethiopia). Dark cocoa, sweet plum, and velvety mouthfeel.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●●○○</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●●</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●○</b></span>
+            </div>
+            <div class="card-footer">
+              <span class="card-price mono-num">$19.50</span>
+              <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('9')">
+                Customize &plus;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-category="beans">
+          <div class="product-image-wrap">
+            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&auto=format&fit=crop&q=80" alt="Mexico Oaxaca Pluma Whole Bean (12oz)" loading="lazy">
+            <span class="card-badge">Direct Trade</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Mexico Oaxaca Pluma Whole Bean (12oz)</h3>
+            <p class="card-desc">Washed process micro-lot from Pluma Hidalgo. Milk chocolate, crisp green apple, and raw sugar cane sweetness.</p>
+            <div style="display:flex; justify-content:space-between; margin:0.5rem 0 0.75rem 0; font-size:0.72rem; background:rgba(201,168,76,0.06); padding:0.35rem 0.5rem; border-radius:6px; border:1px solid rgba(201,168,76,0.15);">
+              <span style="color:var(--text-muted);">Acidity: <b style="color:var(--accent-gold);">●●●○</b></span>
+              <span style="color:var(--text-muted);">Body: <b style="color:var(--accent-gold);">●●●○</b></span>
+              <span style="color:var(--text-muted);">Sweetness: <b style="color:var(--accent-gold);">●●●●</b></span>
+            </div>
+            <div class="card-footer">
+              <span class="card-price mono-num">$21.00</span>
               <button class="btn btn-primary btn-sm" onclick="handleItemOrderClick('10')">
                 Customize &plus;
               </button>
@@ -426,8 +467,8 @@
     </div>
   </footer>
 
-  <script src="../shared/api-client.js?v=21.0"></script>
-  <script src="../shared/components.js?v=21.0"></script>
+  <script src="../shared/api-client.js?v=22.0"></script>
+  <script src="../shared/components.js?v=22.0"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       initAustinTimeBadge('austin-status-badge');
@@ -607,6 +648,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof Lenis !== 'undefined') {
         const lenis = new Lenis({ lerp: 0.08, wheelMultiplier: 1.0, smoothWheel: true });
+        window.lenis = lenis;
         if (typeof ScrollTrigger !== 'undefined') {
           lenis.on('scroll', ScrollTrigger.update);
           gsap.ticker.add((time) => { lenis.raf(time * 1000); });
