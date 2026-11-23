@@ -1,0 +1,2312 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\playwright.config.js",
+    "rootDir": "C:/Users/HP/.gemini/antigravity/scratch/repo_01_coffee/audit/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/HP/.gemini/antigravity/scratch/repo_01_coffee/audit/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/HP/.gemini/antigravity/scratch/repo_01_coffee/audit/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 45000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests",
+        "snapshotDir": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 45000,
+        "use": {
+          "channel": "chrome",
+          "headless": true,
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "ignoreHTTPSErrors": true,
+          "video": "off",
+          "screenshot": "on",
+          "trace": "retain-on-failure",
+          "baseURL": "https://satwik92105-png.github.io/01-austin-roasters-coffee/"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit-results\\test-results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit-results\\playwright-report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "accessibility.spec.js",
+      "file": "accessibility.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "WCAG Accessibility Baseline Audit",
+          "file": "accessibility.spec.js",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Accessibility compliance for index.html",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2162,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:33.098Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-1dcd4-y-compliance-for-index-html\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-f0439f0d4e98eeb75b22",
+              "file": "accessibility.spec.js",
+              "line": 14,
+              "column": 5
+            },
+            {
+              "title": "Accessibility compliance for demo.html",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1593,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:35.834Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-3002a-ty-compliance-for-demo-html\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-7e4bd15690c5ffdbb553",
+              "file": "accessibility.spec.js",
+              "line": 14,
+              "column": 5
+            },
+            {
+              "title": "Accessibility compliance for tier1/index.html",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3380,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:37.446Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-cebc1-liance-for-tier1-index-html\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-f453189f95e322ed94d5",
+              "file": "accessibility.spec.js",
+              "line": 14,
+              "column": 5
+            },
+            {
+              "title": "Accessibility compliance for tier2/menu.html",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1431,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:40.846Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-0874b-pliance-for-tier2-menu-html\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-57a4b81b56d0070298e8",
+              "file": "accessibility.spec.js",
+              "line": 14,
+              "column": 5
+            },
+            {
+              "title": "Accessibility compliance for tier3/menu.html",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1723,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m4\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m4\u001b[39m\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\accessibility.spec.js:45:32",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\accessibility.spec.js",
+                          "column": 32,
+                          "line": 45
+                        },
+                        "snippet": " \u001b[90m 43 |\u001b[39m       \u001b[90m// Log findings for report\u001b[39m\n \u001b[90m 44 |\u001b[39m       expect(imagesWithoutAlt)\u001b[33m.\u001b[39mtoBeLessThanOrEqual(\u001b[35m5\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 45 |\u001b[39m       expect(unlabelledInputs)\u001b[33m.\u001b[39mtoBeLessThanOrEqual(\u001b[35m3\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 46 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m   }\n \u001b[90m 48 |\u001b[39m })\u001b[33m;\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\accessibility.spec.js",
+                            "column": 32,
+                            "line": 45
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m4\u001b[39m\n\n  43 |       // Log findings for report\n  44 |       expect(imagesWithoutAlt).toBeLessThanOrEqual(5);\n> 45 |       expect(unlabelledInputs).toBeLessThanOrEqual(3);\n     |                                ^\n  46 |     });\n  47 |   }\n  48 | });\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\accessibility.spec.js:45:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:42.295Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-c96df-pliance-for-tier3-menu-html\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-c96df-pliance-for-tier3-menu-html\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-c96df-pliance-for-tier3-menu-html\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\accessibility.spec.js",
+                        "column": 32,
+                        "line": 45
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-c922779278d1ff3f46bf",
+              "file": "accessibility.spec.js",
+              "line": 14,
+              "column": 5
+            },
+            {
+              "title": "Accessibility compliance for tier3/admin.html",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1399,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:44.856Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\accessibility-WCAG-Accessi-0f177-liance-for-tier3-admin-html\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d316df4bad39fab891ed-f4500251a9c114690f51",
+              "file": "accessibility.spec.js",
+              "line": 14,
+              "column": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "admin.spec.js",
+      "file": "admin.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Owner Operations Portal & POS Back-Office Audit",
+          "file": "admin.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Tier 2 Admin PIN login and tab switching",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2169,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:46.612Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\admin-Owner-Operations-Por-ad8be-PIN-login-and-tab-switching\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "73482573f1568b679d78-e8932db2950acfe5e19e",
+              "file": "admin.spec.js",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "Tier 3 Enterprise Admin: PIN Auth, Tabs, and 86d Stock Controls",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1066,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]') resolved to 3 elements:\n    1) <button type=\"submit\" class=\"btn btn-primary btn-lg\">↵            Save Offering & Update Menu →↵      …</button> aka getByText('Save Offering & Update Menu →')\n    2) <button type=\"submit\" class=\"btn btn-primary\" id=\"btn-send-google-otp\">…</button> aka getByText('Send 6-Digit Code to Gmail →')\n    3) <button type=\"submit\" class=\"btn btn-primary\" id=\"btn-submit-google-verify\">↵                  Verify & Sign In →↵           …</button> aka getByText('Verify & Sign In →')\n\nCall log:\n\u001b[2m    - checking visibility of locator('button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]') resolved to 3 elements:\n    1) <button type=\"submit\" class=\"btn btn-primary btn-lg\">↵            Save Offering & Update Menu →↵      …</button> aka getByText('Save Offering & Update Menu →')\n    2) <button type=\"submit\" class=\"btn btn-primary\" id=\"btn-send-google-otp\">…</button> aka getByText('Send 6-Digit Code to Gmail →')\n    3) <button type=\"submit\" class=\"btn btn-primary\" id=\"btn-submit-google-verify\">↵                  Verify & Sign In →↵           …</button> aka getByText('Verify & Sign In →')\n\nCall log:\n\u001b[2m    - checking visibility of locator('button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]')\u001b[22m\n\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\admin.spec.js:32:27",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\admin.spec.js",
+                          "column": 27,
+                          "line": 32
+                        },
+                        "snippet": " \u001b[90m 30 |\u001b[39m       \u001b[36mawait\u001b[39m pinInput\u001b[33m.\u001b[39mfill(\u001b[32m'1234'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 31 |\u001b[39m       \u001b[36mconst\u001b[39m unlockBtn \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 32 |\u001b[39m       \u001b[36mif\u001b[39m (\u001b[36mawait\u001b[39m unlockBtn\u001b[33m.\u001b[39misVisible()) {\n \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 33 |\u001b[39m         \u001b[36mawait\u001b[39m unlockBtn\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m500\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 35 |\u001b[39m       }"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\admin.spec.js",
+                            "column": 27,
+                            "line": 32
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]') resolved to 3 elements:\n    1) <button type=\"submit\" class=\"btn btn-primary btn-lg\">↵            Save Offering & Update Menu →↵      …</button> aka getByText('Save Offering & Update Menu →')\n    2) <button type=\"submit\" class=\"btn btn-primary\" id=\"btn-send-google-otp\">…</button> aka getByText('Send 6-Digit Code to Gmail →')\n    3) <button type=\"submit\" class=\"btn btn-primary\" id=\"btn-submit-google-verify\">↵                  Verify & Sign In →↵           …</button> aka getByText('Verify & Sign In →')\n\nCall log:\n\u001b[2m    - checking visibility of locator('button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]')\u001b[22m\n\n\n  30 |       await pinInput.fill('1234');\n  31 |       const unlockBtn = page.locator('button:has-text(\"Unlock\"), #btn-pin-submit, button[type=\"submit\"]');\n> 32 |       if (await unlockBtn.isVisible()) {\n     |                           ^\n  33 |         await unlockBtn.click();\n  34 |         await page.waitForTimeout(500);\n  35 |       }\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\admin.spec.js:32:27"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:48.800Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\admin-Owner-Operations-Por-6b749-Tabs-and-86d-Stock-Controls\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\admin-Owner-Operations-Por-6b749-Tabs-and-86d-Stock-Controls\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\admin-Owner-Operations-Por-6b749-Tabs-and-86d-Stock-Controls\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\admin.spec.js",
+                        "column": 27,
+                        "line": 32
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "73482573f1568b679d78-cdc3befdd7c56534cd21",
+              "file": "admin.spec.js",
+              "line": 24,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "cart.spec.js",
+      "file": "cart.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Customer Experience: Cart Drawer & Pricing Calculations",
+          "file": "cart.spec.js",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "C1: Adding an item increments cart badge count and opens drawer",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12328,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first()\u001b[22m\n\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js:16:26",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js",
+                          "column": 26,
+                          "line": 16
+                        },
+                        "snippet": " \u001b[90m 14 |\u001b[39m     \u001b[90m// Add first item\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mconst\u001b[39m addBtn \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 16 |\u001b[39m     \u001b[36mawait\u001b[39m expect(addBtn)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 17 |\u001b[39m     \u001b[36mawait\u001b[39m addBtn\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 18 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m500\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js",
+                            "column": 26,
+                            "line": 16
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first() with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first()\u001b[22m\n\n\n  14 |     // Add first item\n  15 |     const addBtn = page.locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first();\n> 16 |     await expect(addBtn).toBeVisible();\n     |                          ^\n  17 |     await addBtn.click();\n  18 |     await page.waitForTimeout(500);\n  19 |\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js:16:26"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:15:50.551Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-927c5-adge-count-and-opens-drawer\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-927c5-adge-count-and-opens-drawer\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-927c5-adge-count-and-opens-drawer\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js",
+                        "column": 26,
+                        "line": 16
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ceb0bea1dd12be5aadb7-bcf0c997aeaf7ae2dd27",
+              "file": "cart.spec.js",
+              "line": 7,
+              "column": 3
+            },
+            {
+              "title": "C2: Subtotal, Austin 8.25% Tax, and Total are mathematically consistent",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 45298,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js",
+                            "column": 18,
+                            "line": 40
+                          },
+                          "message": "Error: locator.click: Test timeout of 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first()\u001b[22m\n\n\n  38 |     // Add item\n  39 |     const addBtn = page.locator('button.btn-add-item, button:has-text(\"Add to Order\"), button:has-text(\"Add to Cart\")').first();\n> 40 |     await addBtn.click();\n     |                  ^\n  41 |     await page.waitForTimeout(400);\n  42 |\n  43 |     const confirmAdd = page.locator('#btn-confirm-add, button:has-text(\"Add to Order\")').first();\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js:40:18"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:16:03.891Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-0775f-e-mathematically-consistent\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-0775f-e-mathematically-consistent\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-0775f-e-mathematically-consistent\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ceb0bea1dd12be5aadb7-9de2deabbb8be7dceb7e",
+              "file": "cart.spec.js",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "C3: Promo code DOGSPEED15 applies 15% discount",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 45366,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js",
+                            "column": 18,
+                            "line": 72
+                          },
+                          "message": "Error: locator.click: Test timeout of 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\")').first()\u001b[22m\n\n\n  70 |\n  71 |     const addBtn = page.locator('button.btn-add-item, button:has-text(\"Add to Order\")').first();\n> 72 |     await addBtn.click();\n     |                  ^\n  73 |     await page.waitForTimeout(400);\n  74 |\n  75 |     const confirmAdd = page.locator('#btn-confirm-add, button:has-text(\"Add to Order\")').first();\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js:72:18"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:16:50.286Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-6a678-SPEED15-applies-15-discount\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-6a678-SPEED15-applies-15-discount\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-6a678-SPEED15-applies-15-discount\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ceb0bea1dd12be5aadb7-127111239ff3e1072307",
+              "file": "cart.spec.js",
+              "line": 67,
+              "column": 3
+            },
+            {
+              "title": "C4: Cart items persist across page reload",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 45277,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js",
+                            "column": 18,
+                            "line": 100
+                          },
+                          "message": "Error: locator.click: Test timeout of 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\")').first()\u001b[22m\n\n\n   98 |\n   99 |     const addBtn = page.locator('button.btn-add-item, button:has-text(\"Add to Order\")').first();\n> 100 |     await addBtn.click();\n      |                  ^\n  101 |     await page.waitForTimeout(400);\n  102 |\n  103 |     const confirmAdd = page.locator('#btn-confirm-add, button:has-text(\"Add to Order\")').first();\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\cart.spec.js:100:18"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:17:37.027Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-d500c--persist-across-page-reload\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-d500c--persist-across-page-reload\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\cart-Customer-Experience-C-d500c--persist-across-page-reload\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ceb0bea1dd12be5aadb7-fef431018e3f75bc89b0",
+              "file": "cart.spec.js",
+              "line": 95,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "catering.spec.js",
+      "file": "catering.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Event & Enterprise Catering Engine Audit (Tier 3)",
+          "file": "catering.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Headcount slider, packages, and instant quote calculation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2661,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:18:23.393Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\catering-Event-Enterprise--af5c2-d-instant-quote-calculation\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6bf7558de6331893d50e-0fa5aed311a1fe8731ee",
+              "file": "catering.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "checkout.spec.js",
+      "file": "checkout.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Customer Experience: Checkout & Order Placement Journey",
+          "file": "checkout.spec.js",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "CK1: Checkout modal opens and input focus does NOT trigger auto-close",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 45285,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\checkout.spec.js",
+                            "column": 18,
+                            "line": 13
+                          },
+                          "message": "Error: locator.click: Test timeout of 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\")').first()\u001b[22m\n\n\n  11 |     // Add item to cart\n  12 |     const addBtn = page.locator('button.btn-add-item, button:has-text(\"Add to Order\")').first();\n> 13 |     await addBtn.click();\n     |                  ^\n  14 |     await page.waitForTimeout(400);\n  15 |\n  16 |     const confirmAdd = page.locator('#btn-confirm-add, button:has-text(\"Add to Order\")').first();\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\checkout.spec.js:13:18"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:18:26.363Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\checkout-Customer-Experien-390e2-does-NOT-trigger-auto-close\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\checkout-Customer-Experien-390e2-does-NOT-trigger-auto-close\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\checkout-Customer-Experien-390e2-does-NOT-trigger-auto-close\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "24e4b3ac21f7f473b7e5-5048723366d220445508",
+              "file": "checkout.spec.js",
+              "line": 7,
+              "column": 3
+            },
+            {
+              "title": "CK2: Synthetic order placement completes and displays confirmation screen with ticket and receipt",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 45277,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 45000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\checkout.spec.js",
+                            "column": 18,
+                            "line": 54
+                          },
+                          "message": "Error: locator.click: Test timeout of 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button.btn-add-item, button:has-text(\"Add to Order\")').first()\u001b[22m\n\n\n  52 |\n  53 |     const addBtn = page.locator('button.btn-add-item, button:has-text(\"Add to Order\")').first();\n> 54 |     await addBtn.click();\n     |                  ^\n  55 |     await page.waitForTimeout(400);\n  56 |\n  57 |     const confirmAdd = page.locator('#btn-confirm-add, button:has-text(\"Add to Order\")').first();\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\checkout.spec.js:54:18"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:19:12.651Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\checkout-Customer-Experien-2722d-een-with-ticket-and-receipt\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\checkout-Customer-Experien-2722d-een-with-ticket-and-receipt\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\checkout-Customer-Experien-2722d-een-with-ticket-and-receipt\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "24e4b3ac21f7f473b7e5-adeb8c00abb989bc17e4",
+              "file": "checkout.spec.js",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "CK3: Payment flow audit — verify whether card payments are simulated vs genuine Stripe processing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1999,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:19:59.065Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\checkout-Customer-Experien-d58fd-s-genuine-Stripe-processing\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "24e4b3ac21f7f473b7e5-baa052fbb1fef5edc88c",
+              "file": "checkout.spec.js",
+              "line": 93,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "homepage.spec.js",
+      "file": "homepage.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Customer Experience: Homepage & Landing Experience",
+          "file": "homepage.spec.js",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "A1: Master Agency Hub loads with correct title, brand identity and 3 tiers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1255,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:01.351Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\homepage-Customer-Experien-22c6e--brand-identity-and-3-tiers\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-108dfc9c962c67108a26",
+              "file": "homepage.spec.js",
+              "line": 7,
+              "column": 3
+            },
+            {
+              "title": "A2: Standalone Client Demo Page loads with 3 luxury roastery cards & amenities",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1533,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:02.627Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\homepage-Customer-Experien-a6180-ry-roastery-cards-amenities\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-84ae77f0a9d6a549120e",
+              "file": "homepage.spec.js",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "A3: Tier 1 Brand Showcase single-page loads with Austin CST status & filter menu",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2291,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m4\u001b[39m\nReceived:    \u001b[31m0\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m4\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\homepage.spec.js:71:38",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\homepage.spec.js",
+                          "column": 38,
+                          "line": 71
+                        },
+                        "snippet": " \u001b[90m 69 |\u001b[39m     \u001b[90m// Check Category filter buttons\u001b[39m\n \u001b[90m 70 |\u001b[39m     \u001b[36mconst\u001b[39m filterBtns \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.filter-btn, .category-pill, .menu-tab'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 71 |\u001b[39m     expect(\u001b[36mawait\u001b[39m filterBtns\u001b[33m.\u001b[39mcount())\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m4\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 72 |\u001b[39m\n \u001b[90m 73 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ path\u001b[33m:\u001b[39m \u001b[32m`${SCREENSHOT_DIR}/tier1_brand_showcase.png`\u001b[39m\u001b[33m,\u001b[39m fullPage\u001b[33m:\u001b[39m \u001b[36mfalse\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 74 |\u001b[39m   })\u001b[33m;\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\homepage.spec.js",
+                            "column": 38,
+                            "line": 71
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m4\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n\n  69 |     // Check Category filter buttons\n  70 |     const filterBtns = page.locator('.filter-btn, .category-pill, .menu-tab');\n> 71 |     expect(await filterBtns.count()).toBeGreaterThanOrEqual(4);\n     |                                      ^\n  72 |\n  73 |     await page.screenshot({ path: `${SCREENSHOT_DIR}/tier1_brand_showcase.png`, fullPage: false });\n  74 |   });\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\homepage.spec.js:71:38"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:04.177Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\homepage-Customer-Experien-b261c-stin-CST-status-filter-menu\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\homepage-Customer-Experien-b261c-stin-CST-status-filter-menu\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\homepage-Customer-Experien-b261c-stin-CST-status-filter-menu\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\homepage.spec.js",
+                        "column": 38,
+                        "line": 71
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-21b9d71392d4c1535870",
+              "file": "homepage.spec.js",
+              "line": 61,
+              "column": 3
+            },
+            {
+              "title": "A4: Tier 3 Flagship Storefront loads with cinematic hero & 3D timeline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1971,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:07.230Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\homepage-Customer-Experien-1b2e2--cinematic-hero-3D-timeline\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "cf4ffee829137744e3cd-2999b7c7156d574b9e42",
+              "file": "homepage.spec.js",
+              "line": 76,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "kitchen.spec.js",
+      "file": "kitchen.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Barista Kitchen Display System (KDS) Audit (Tier 3)",
+          "file": "kitchen.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "KDS Queue rendering and bump-bar status transitions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 845,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:09.480Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\kitchen-Barista-Kitchen-Di-8af0c-bump-bar-status-transitions\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4ede8ec295a64677fbe3-be266f460bd09900d46d",
+              "file": "kitchen.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "menu.spec.js",
+      "file": "menu.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Customer Experience: Menu Catalog & Product Interaction",
+          "file": "menu.spec.js",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "M1: Tier 3 Menu renders all 10 canonical products with names, prices, and images",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11974,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/Menu/i\u001b[39m\nReceived string:  \u001b[31m\"Order Ahead — Flat Track Coffee Roasters (Flagship)\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    23 × locator resolved to <html lang=\"en\" class=\"lenis\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"Order Ahead — Flat Track Coffee Roasters (Flagship)\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/Menu/i\u001b[39m\nReceived string:  \u001b[31m\"Order Ahead — Flat Track Coffee Roasters (Flagship)\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    23 × locator resolved to <html lang=\"en\" class=\"lenis\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"Order Ahead — Flat Track Coffee Roasters (Flagship)\"\u001b[22m\n\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js:9:24",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js",
+                          "column": 24,
+                          "line": 9
+                        },
+                        "snippet": " \u001b[90m  7 |\u001b[39m   test(\u001b[32m'M1: Tier 3 Menu renders all 10 canonical products with names, prices, and images'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m  8 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'tier3/menu.html'\u001b[39m\u001b[33m,\u001b[39m { waitUntil\u001b[33m:\u001b[39m \u001b[32m'networkidle'\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveTitle(\u001b[35m/Menu/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[90m// Verify product cards are displayed\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.menu-card, .menu-item-card, [data-item-id]'\u001b[39m)\u001b[33m;\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js",
+                            "column": 24,
+                            "line": 9
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveTitle\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected pattern: \u001b[32m/Menu/i\u001b[39m\nReceived string:  \u001b[31m\"Order Ahead — Flat Track Coffee Roasters (Flagship)\"\u001b[39m\nTimeout: 10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveTitle\" with timeout 10000ms\u001b[22m\n\u001b[2m    23 × locator resolved to <html lang=\"en\" class=\"lenis\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"Order Ahead — Flat Track Coffee Roasters (Flagship)\"\u001b[22m\n\n\n   7 |   test('M1: Tier 3 Menu renders all 10 canonical products with names, prices, and images', async ({ page }) => {\n   8 |     await page.goto('tier3/menu.html', { waitUntil: 'networkidle' });\n>  9 |     await expect(page).toHaveTitle(/Menu/i);\n     |                        ^\n  10 |\n  11 |     // Verify product cards are displayed\n  12 |     const cards = page.locator('.menu-card, .menu-item-card, [data-item-id]');\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js:9:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:10.353Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-20fa9-ith-names-prices-and-images\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-20fa9-ith-names-prices-and-images\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-20fa9-ith-names-prices-and-images\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js",
+                        "column": 24,
+                        "line": 9
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "217198a80e852077fe39-097f4131974409803b1c",
+              "file": "menu.spec.js",
+              "line": 7,
+              "column": 3
+            },
+            {
+              "title": "M2: Category filters filter items without reloading page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2184,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:23.074Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-fd729-tems-without-reloading-page\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "217198a80e852077fe39-a8fd1a4bbb0aa4787f3b",
+              "file": "menu.spec.js",
+              "line": 25,
+              "column": 3
+            },
+            {
+              "title": "M3: Flavor Profile Radar Meters (Acidity, Body, Sweetness) are rendered on Tier 3",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1921,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m0\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js:48:19",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js",
+                          "column": 19,
+                          "line": 48
+                        },
+                        "snippet": " \u001b[90m 46 |\u001b[39m     \u001b[36mconst\u001b[39m count \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m flavorMeters\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m     \u001b[90m// Flavor meters exist on Tier 3 coffee items\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 48 |\u001b[39m     expect(count)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ path\u001b[33m:\u001b[39m \u001b[32m`${SCREENSHOT_DIR}/menu_flavor_meters.png`\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 50 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 51 |\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js",
+                            "column": 19,
+                            "line": 48
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n\n  46 |     const count = await flavorMeters.count();\n  47 |     // Flavor meters exist on Tier 3 coffee items\n> 48 |     expect(count).toBeGreaterThanOrEqual(1);\n     |                   ^\n  49 |     await page.screenshot({ path: `${SCREENSHOT_DIR}/menu_flavor_meters.png` });\n  50 |   });\n  51 |\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js:48:19"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:25.545Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-3e52d-ness-are-rendered-on-Tier-3\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-3e52d-ness-are-rendered-on-Tier-3\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-3e52d-ness-are-rendered-on-Tier-3\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\menu.spec.js",
+                        "column": 19,
+                        "line": 48
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "217198a80e852077fe39-05a771d9e023e9697458",
+              "file": "menu.spec.js",
+              "line": 41,
+              "column": 3
+            },
+            {
+              "title": "M4: Drink Customizer modal opens and displays modifier options",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2766,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:28.242Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\menu-Customer-Experience-M-3b6bc-d-displays-modifier-options\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "217198a80e852077fe39-94f5d43404a446b5eb0c",
+              "file": "menu.spec.js",
+              "line": 52,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "navigation.spec.js",
+      "file": "navigation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Customer Experience: Site Navigation & Link Integrity",
+          "file": "navigation.spec.js",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "N1: Navigation links across Tier 3 suite resolve without 404",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4276,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:31.317Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\navigation-Customer-Experi-ab626-3-suite-resolve-without-404\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce7c070a851ea64285fd-370ac1a449601398f7e9",
+              "file": "navigation.spec.js",
+              "line": 7,
+              "column": 3
+            },
+            {
+              "title": "N2: Mobile menu toggle functions on 390x844 viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1636,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:35.614Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\navigation-Customer-Experi-e07c2-nctions-on-390x844-viewport\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce7c070a851ea64285fd-e9652497c91ae44bcf97",
+              "file": "navigation.spec.js",
+              "line": 52,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "reservations.spec.js",
+      "file": "reservations.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Table Reservations Engine Audit (Tier 2 & Tier 3)",
+          "file": "reservations.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Tier 2 Reservation Form flow and confirmation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2021,
+                      "error": {
+                        "message": "Error: locator.fill: Error: Element is not an <input>, <textarea> or [contenteditable] element\nCall log:\n\u001b[2m  - waiting for locator('#res-date, input[type=\"date\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <select required=\"\" id=\"res-date\" class=\"form-select\">…</select>\u001b[22m\n\u001b[2m    - fill(\"2026-11-24\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and editable\u001b[22m\n",
+                        "stack": "Error: locator.fill: Error: Element is not an <input>, <textarea> or [contenteditable] element\nCall log:\n\u001b[2m  - waiting for locator('#res-date, input[type=\"date\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <select required=\"\" id=\"res-date\" class=\"form-select\">…</select>\u001b[22m\n\u001b[2m    - fill(\"2026-11-24\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and editable\u001b[22m\n\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\reservations.spec.js:36:23",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\reservations.spec.js",
+                          "column": 23,
+                          "line": 36
+                        },
+                        "snippet": " \u001b[90m 34 |\u001b[39m       tomorrow\u001b[33m.\u001b[39msetDate(tomorrow\u001b[33m.\u001b[39mgetDate() \u001b[33m+\u001b[39m \u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 35 |\u001b[39m       \u001b[36mconst\u001b[39m dateStr \u001b[33m=\u001b[39m tomorrow\u001b[33m.\u001b[39mtoISOString()\u001b[33m.\u001b[39msplit(\u001b[32m'T'\u001b[39m)[\u001b[35m0\u001b[39m]\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 |\u001b[39m       \u001b[36mawait\u001b[39m dateInput\u001b[33m.\u001b[39mfill(dateStr)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 |\u001b[39m     }\n \u001b[90m 38 |\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[90m// Submit reservation\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\reservations.spec.js",
+                            "column": 23,
+                            "line": 36
+                          },
+                          "message": "Error: locator.fill: Error: Element is not an <input>, <textarea> or [contenteditable] element\nCall log:\n\u001b[2m  - waiting for locator('#res-date, input[type=\"date\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <select required=\"\" id=\"res-date\" class=\"form-select\">…</select>\u001b[22m\n\u001b[2m    - fill(\"2026-11-24\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and editable\u001b[22m\n\n\n  34 |       tomorrow.setDate(tomorrow.getDate() + 1);\n  35 |       const dateStr = tomorrow.toISOString().split('T')[0];\n> 36 |       await dateInput.fill(dateStr);\n     |                       ^\n  37 |     }\n  38 |\n  39 |     // Submit reservation\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\reservations.spec.js:36:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:37.281Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\reservations-Table-Reserva-08104--Form-flow-and-confirmation\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\reservations-Table-Reserva-08104--Form-flow-and-confirmation\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\reservations-Table-Reserva-08104--Form-flow-and-confirmation\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\reservations.spec.js",
+                        "column": 23,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b4f6e27dbdf1c201f3d0-95d4621e561896255e9a",
+              "file": "reservations.spec.js",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "Tier 3 VIP Reservation Engine with Special Requests",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2485,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:40.255Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\reservations-Table-Reserva-dff74-ngine-with-Special-Requests\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b4f6e27dbdf1c201f3d0-c77d1e9b66a76740e749",
+              "file": "reservations.spec.js",
+              "line": 52,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "responsive.spec.js",
+      "file": "responsive.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Responsive Viewports & Overflow Audit",
+          "file": "responsive.spec.js",
+          "line": 21,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Responsive layout check on Mobile Android (360x800)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4581,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:43.126Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\responsive-Responsive-View-12d0c--on-Mobile-Android-360x800-\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "68833bfb7a01a66a4f98-77b7dd0dcb7e38b3d5e0",
+              "file": "responsive.spec.js",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "Responsive layout check on Mobile iOS (390x844)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3323,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:47.725Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\responsive-Responsive-View-17f65-heck-on-Mobile-iOS-390x844-\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "68833bfb7a01a66a4f98-1443f37fb97a99fe8fc6",
+              "file": "responsive.spec.js",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "Responsive layout check on Tablet Portrait (768x1024)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3067,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:51.065Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\responsive-Responsive-View-c240b-n-Tablet-Portrait-768x1024-\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "68833bfb7a01a66a4f98-79b2941fc4cdb55b0054",
+              "file": "responsive.spec.js",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "Responsive layout check on Tablet Landscape (1024x768)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5442,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:54.149Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\responsive-Responsive-View-2deff--Tablet-Landscape-1024x768-\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "68833bfb7a01a66a4f98-3a3caac3b5c528d5fa12",
+              "file": "responsive.spec.js",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "Responsive layout check on Laptop (1366x768)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4399,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:20:59.610Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\responsive-Responsive-View-e2e4f-t-check-on-Laptop-1366x768-\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "68833bfb7a01a66a4f98-9a1abf960a54025f2533",
+              "file": "responsive.spec.js",
+              "line": 23,
+              "column": 5
+            },
+            {
+              "title": "Responsive layout check on Full HD Desktop (1920x1080)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4594,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:21:04.034Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\responsive-Responsive-View-b8f49--Full-HD-Desktop-1920x1080-\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "68833bfb7a01a66a4f98-9ad912d67e41e51e29a6",
+              "file": "responsive.spec.js",
+              "line": 23,
+              "column": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "security.spec.js",
+      "file": "security.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Application Security & Vulnerability Audit",
+          "file": "security.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Public API Endpoint Data Exposure Audit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1468,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:21:08.664Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3efa7971ab9a8dd627a5-8c8f93b57699bc33578c",
+              "file": "security.spec.js",
+              "line": 6,
+              "column": 3
+            },
+            {
+              "title": "Input Sanitization & XSS Resistance on Checkout Form",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1892,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:21:10.144Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\security-Application-Secur-c9def-Resistance-on-Checkout-Form\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3efa7971ab9a8dd627a5-5c127263ba165aea9ad9",
+              "file": "security.spec.js",
+              "line": 24,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "subscriptions.spec.js",
+      "file": "subscriptions.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Coffee Club Subscription Engine Audit (Tier 3)",
+          "file": "subscriptions.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Subscription configurator interacts with frequencies, grinds, and quantities",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1942,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\subscriptions.spec.js:11:19",
+                        "location": {
+                          "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\subscriptions.spec.js",
+                          "column": 19,
+                          "line": 11
+                        },
+                        "snippet": " \u001b[90m  9 |\u001b[39m     \u001b[36mconst\u001b[39m planOptions \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'.tier-card, .plan-card, .subscription-option, [data-plan]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 10 |\u001b[39m     \u001b[36mconst\u001b[39m count \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m planOptions\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 11 |\u001b[39m     expect(count)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 12 |\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[90m// Click on a plan\u001b[39m\n \u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m planOptions\u001b[33m.\u001b[39mfirst()\u001b[33m.\u001b[39mclick()\u001b[33m.\u001b[39mcatch(() \u001b[33m=>\u001b[39m {})\u001b[33m;\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\subscriptions.spec.js",
+                            "column": 19,
+                            "line": 11
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n   9 |     const planOptions = page.locator('.tier-card, .plan-card, .subscription-option, [data-plan]');\n  10 |     const count = await planOptions.count();\n> 11 |     expect(count).toBeGreaterThan(0);\n     |                   ^\n  12 |\n  13 |     // Click on a plan\n  14 |     await planOptions.first().click().catch(() => {});\n    at C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\subscriptions.spec.js:11:19"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:21:12.067Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\subscriptions-Coffee-Club--66c0d-ncies-grinds-and-quantities\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\subscriptions-Coffee-Club--66c0d-ncies-grinds-and-quantities\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\subscriptions-Coffee-Club--66c0d-ncies-grinds-and-quantities\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\tests\\subscriptions.spec.js",
+                        "column": 19,
+                        "line": 11
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "4df5616e9f2d27012086-2306b9e2e68914d0b620",
+              "file": "subscriptions.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "tracking.spec.js",
+      "file": "tracking.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Live Customer Order Tracker Audit (Tier 3)",
+          "file": "tracking.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Order lookup, 4-stage stepper, and Roast Points display",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 45000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1543,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-23T18:21:14.769Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\HP\\.gemini\\antigravity\\scratch\\repo_01_coffee\\audit\\test-results\\tracking-Live-Customer-Ord-30b65-er-and-Roast-Points-display\\test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ba78459db1f646e30073-8e06a9a283e23c6590ec",
+              "file": "tracking.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-23T18:15:32.412Z",
+    "duration": 344557.789,
+    "expected": 26,
+    "skipped": 0,
+    "unexpected": 13,
+    "flaky": 0
+  }
+}

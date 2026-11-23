@@ -1,0 +1,34 @@
+{
+  "totalDiscovered": 1131,
+  "totalTested": 1131,
+  "passed": 1127,
+  "failed": 4,
+  "blocked": 0,
+  "notTested": 0,
+  "failedElements": [
+    {
+      "id": "T2_RES-A-021",
+      "page": "tier2/reserve.html",
+      "label": "btn-add-calendar",
+      "reason": "Empty hash link; lacks explicit semantic target or button role"
+    },
+    {
+      "id": "T2_RES-A-024",
+      "page": "tier2/reserve.html",
+      "label": "btn-email-self",
+      "reason": "Empty hash link; lacks explicit semantic target or button role"
+    },
+    {
+      "id": "T3_RES-A-025",
+      "page": "tier3/reserve.html",
+      "label": "📅 Google Calendar",
+      "reason": "Empty hash link; lacks explicit semantic target or button role"
+    },
+    {
+      "id": "T3_RES-A-028",
+      "page": "tier3/reserve.html",
+      "label": "✉️ Email Booking Details",
+      "reason": "Empty hash link; lacks explicit semantic target or button role"
+    }
+  ]
+}

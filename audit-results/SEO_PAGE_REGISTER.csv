@@ -1,0 +1,21 @@
+Page Route,Tier,Page Title,Title Length,Meta Description,Desc Length,Canonical URL,Robots Directive,H1 Count,H2 Count,Alt Tag Coverage,Schema JSON-LD,Status,Audit Notes
+index.html,Hub,Agency Sales Hub & Package Showcase — Flat Track Coffee Roas,64,,0,,"index, follow",1,3,0/0,No,FAIL,Missing Description; Missing Canonical Link
+demo.html,Sales,Client Demo & Amenities Showcase — Flat Track Coffee Roaster,61,,0,,"index, follow",1,6,0/0,No,FAIL,Missing Description; Missing Canonical Link
+owner.html,Portal,Owner Management Portal Hub — Flat Track Roasters,49,,0,,"index, follow",1,0,0/0,No,FAIL,Missing Description; Missing Canonical Link
+tier1/index.html,Tier 1,"Flat Track Coffee Roasters — Austin, TX",39,,0,,"index, follow",1,5,2/2,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier2/index.html,Tier 2,Flat Track Coffee Roasters — Order Ahead & Cafe Hub,51,,0,,"index, follow",1,1,1/1,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier2/menu.html,Tier 2,Order Ahead — Flat Track Coffee Roasters,40,,0,,"index, follow",1,0,11/12,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data; Image Alt Gap (11/12)
+tier2/reserve.html,Tier 2,Reserve a Table — Flat Track Coffee Roasters,44,,0,,"index, follow",0,1,0/0,No,FAIL,Missing Description; Missing Canonical Link; Missing H1; No Structured Data
+tier2/story.html,Tier 2,Our Roastery Story — Flat Track Coffee Roasters,47,,0,,"index, follow",1,1,1/1,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier2/contact.html,Tier 2,Visit & Contact — Flat Track Coffee Roasters,44,,0,,"index, follow",0,1,0/0,No,FAIL,Missing Description; Missing Canonical Link; Missing H1; No Structured Data
+tier2/admin.html,Tier 2,Owner POS & Operations Portal — Flat Track Roasters,51,,0,,"noindex, nofollow",0,5,0/0,No,FAIL,Missing Description; Missing Canonical Link; Missing H1; No Structured Data
+tier3/index.html,Tier 3,Flat Track Coffee Roasters · Flagship 3D Roastery &amp; Subs,69,,0,,"index, follow",2,6,9/9,No,FAIL,Missing Description; Missing Canonical Link; Multiple H1s; No Structured Data
+tier3/menu.html,Tier 3,Order Ahead — Flat Track Coffee Roasters (Flagship),51,,0,,"index, follow",1,0,11/12,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data; Image Alt Gap (11/12)
+tier3/reserve.html,Tier 3,Reserve a Table — Flat Track Coffee Roasters (Flagship),55,,0,,"index, follow",0,1,0/0,No,FAIL,Missing Description; Missing Canonical Link; Missing H1; No Structured Data
+tier3/story.html,Tier 3,Our Roastery Story — Flat Track Coffee Roasters (Flagship),58,,0,,"index, follow",1,1,1/1,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier3/contact.html,Tier 3,Visit & Contact — Flat Track Coffee Roasters (Flagship),55,,0,,"index, follow",0,1,0/0,No,FAIL,Missing Description; Missing Canonical Link; Missing H1; No Structured Data
+tier3/subscribe.html,Tier 3,Bean Subscriptions — Flat Track Coffee Roasters,47,,0,,"index, follow",1,0,0/0,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier3/catering.html,Tier 3,Private Events & B2B Wholesale — Flat Track Coffee Roasters,59,,0,,"index, follow",1,1,0/0,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier3/track.html,Tier 3,Live Order Tracker & Rewards — Flat Track Roasters,50,,0,,"index, follow",1,1,0/0,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier3/kitchen.html,Tier 3,Barista KDS — Flat Track Coffee Roasters,40,,0,,"noindex, nofollow",1,1,0/0,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data
+tier3/admin.html,Tier 3,Tier 3 Flagship Operations &amp; Executive BI — Flat Track R,67,,0,,"noindex, nofollow",1,6,0/1,No,FAIL,Missing Description; Missing Canonical Link; No Structured Data; Image Alt Gap (0/1)
