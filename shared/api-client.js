@@ -253,8 +253,7 @@
     },
 
     getAdminHeaders() {
-      const pin = sessionStorage.getItem('flattrack_admin_pin') || '1234';
-      const headers = { 'Content-Type': 'application/json', 'X-Admin-PIN': pin };
+      const headers = { 'Content-Type': 'application/json' };
       try {
         const token = sessionStorage.getItem('flattrack_admin_token');
         if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -433,7 +432,10 @@
       const state = loadState();
       let backendOrders = [];
       try {
-        const res = await fetch(`${API_BASE}/orders`, { signal: AbortSignal.timeout(4000) });
+        const res = await fetch(`${API_BASE}/orders`, {
+          headers: this.getAdminHeaders(),
+          signal: AbortSignal.timeout(4000)
+        });
         if (res.ok) {
           backendOrders = await res.json();
           this.isBackendOnline = true;
@@ -572,7 +574,10 @@
       const state = loadState();
       let backendList = [];
       try {
-        const res = await fetch(`${API_BASE}/reservations`, { signal: AbortSignal.timeout(3000) });
+        const res = await fetch(`${API_BASE}/reservations`, {
+          headers: this.getAdminHeaders(),
+          signal: AbortSignal.timeout(3000)
+        });
         if (res.ok) {
           this.isBackendOnline = true;
           backendList = await res.json();
@@ -701,7 +706,10 @@
 
     async getInquiries() {
       try {
-        const res = await fetch(`${API_BASE}/messages`, { signal: AbortSignal.timeout(2000) });
+        const res = await fetch(`${API_BASE}/messages`, {
+          headers: this.getAdminHeaders(),
+          signal: AbortSignal.timeout(2000)
+        });
         if (res.ok) return await res.json();
       } catch (e) {}
       const state = loadState();
@@ -739,7 +747,10 @@
 
     async getSubscribers() {
       try {
-        const res = await fetch(`${API_BASE}/subscriptions`, { signal: AbortSignal.timeout(2000) });
+        const res = await fetch(`${API_BASE}/subscriptions`, {
+          headers: this.getAdminHeaders(),
+          signal: AbortSignal.timeout(2000)
+        });
         if (res.ok) return await res.json();
       } catch (e) {}
       const state = loadState();
@@ -772,16 +783,11 @@
       try {
         const raw = sessionStorage.getItem('flattrack_admin_session');
         if (raw) return JSON.parse(raw);
-        const pin = sessionStorage.getItem('flattrack_admin_pin');
-        if (pin === '1234' || pin === 'roastmaster123') {
-          return { email: 'admin@flattrackcoffee.com', name: 'Roastery Owner', role: 'admin' };
-        }
       } catch (e) {}
       return null;
     },
 
     async login(email, password) {
-      const isAdminAttempt = (email === "admin@flattrackcoffee.com" || password === "roastmaster123" || password === "1234");
       try {
         const res = await fetchWithRetry(`${API_BASE}/auth/login`, {
           method: 'POST',
@@ -790,12 +796,12 @@
         });
         if (res && res.ok) {
           const data = await res.json();
-          if (data.role === 'admin' || isAdminAttempt) {
-            const adminUser = { email: email || "admin@flattrackcoffee.com", name: "Roastery Owner", role: "admin" };
+          if (data.role === 'admin' || data.role === 'barista') {
+            const adminUser = { email: email, name: data.role === 'admin' ? "Roastery Owner" : "Barista", role: data.role };
             try {
               sessionStorage.setItem('flattrack_admin_session', JSON.stringify(adminUser));
+              sessionStorage.setItem('flattrack_admin_auth', 'true');
               if (data.access_token) sessionStorage.setItem('flattrack_admin_token', data.access_token);
-              if (password === '1234' || password === 'roastmaster123') sessionStorage.setItem('flattrack_admin_pin', password);
             } catch(e){}
             return { success: true, user: adminUser, token: data.access_token };
           } else {
@@ -803,22 +809,18 @@
             try {
               localStorage.setItem('flattrack_customer_session', JSON.stringify(custUser));
               localStorage.setItem('flat_track_customer_session', JSON.stringify(custUser));
+              if (data.access_token) localStorage.setItem('flattrack_customer_token', data.access_token);
               window.dispatchEvent(new CustomEvent('flat_track_auth_change', { detail: custUser }));
             } catch(e){}
             return { success: true, user: custUser, token: data.access_token };
           }
+        } else if (res && res.status === 429) {
+          const errData = await res.json().catch(() => ({}));
+          return { success: false, message: errData.detail || "Account temporarily locked due to too many failed attempts. Try again in 15 minutes." };
         }
       } catch (e) {}
 
-      if (isAdminAttempt) {
-        const adminUser = { email: "admin@flattrackcoffee.com", name: "Roastery Owner", role: "admin" };
-        try {
-          sessionStorage.setItem('flattrack_admin_session', JSON.stringify(adminUser));
-          sessionStorage.setItem('flattrack_admin_pin', password === '1234' ? '1234' : 'roastmaster123');
-        } catch(e){}
-        return { success: true, user: adminUser };
-      }
-      return { success: false, message: "Invalid credentials" };
+      return { success: false, message: "Invalid email or password" };
     },
 
     async register(email, password, name) {
@@ -910,23 +912,24 @@
       return { valid: false };
     },
 
-    // AUTOMATIC BACKGROUND EMAIL CONFIRMATION DISPATCH
+    // AUTOMATIC BACKGROUND EMAIL CONFIRMATION DISPATCH (SECURE SERVER-SIDE RESEND INTEGRATION)
     async sendConfirmationEmail(customerEmail, subject, details = {}) {
       if (!customerEmail || typeof customerEmail !== 'string' || !customerEmail.includes('@')) {
         return { success: false, reason: 'Invalid or missing email' };
       }
       try {
         const payload = {
-          _subject: subject || "Flat Track Coffee Roasters Confirmation",
-          _template: "table",
-          _captcha: "false",
-          "Roastery Location": "1611 E Cesar Chavez St, Austin, TX 78702",
-          "Roastery Phone": "(512) 540-6033",
-          ...details
+          email: customerEmail,
+          subject: subject || "Flat Track Coffee Roasters Confirmation",
+          details: {
+            "Roastery Location": "1611 E Cesar Chavez St, Austin, TX 78702",
+            "Roastery Phone": "(512) 540-6033",
+            ...details
+          }
         };
 
-        // Non-blocking background call
-        fetch(`https://formsubmit.co/ajax/${encodeURIComponent(customerEmail)}`, {
+        // Secure server-side notification dispatch - FormSubmit removed
+        fetch(`${API_BASE}/notifications/send-confirmation`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -935,12 +938,12 @@
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(6000)
         }).catch(err => {
-          console.warn("Background email dispatch network notice:", err);
+          console.warn("Background notification dispatch notice:", err);
         });
 
-        return { success: true };
+        return { success: true, mode: "server_notification" };
       } catch (err) {
-        console.warn("Background email dispatch caught error:", err);
+        console.warn("Background notification dispatch caught error:", err);
         return { success: false, error: err.message };
       }
     },

@@ -104,6 +104,13 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     role: str
 
+class EmailNotificationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    email: str = Field(..., min_length=5, max_length=120)
+    subject: str = Field(..., min_length=1, max_length=200)
+    details: Optional[dict] = Field(default_factory=dict)
+
 class AuditLogResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

@@ -18,11 +18,12 @@ from models import (
 )
 from schemas import (
     MenuItemCreate, StockUpdateRequest, MenuItemResponse, OrderCreate, ReservationCreate,
-    InquiryCreate, SubscriberCreate, LoginRequest, TokenResponse, AuditLogResponse
+    InquiryCreate, SubscriberCreate, LoginRequest, TokenResponse, AuditLogResponse,
+    EmailNotificationRequest
 )
 from auth import (
     hash_password, verify_password, create_access_token,
-    require_admin, require_staff, get_client_ip,
+    require_admin, require_staff, get_client_ip, get_current_user_claims,
     check_login_lockout, record_login_failure, record_login_success
 )
 
@@ -58,12 +59,27 @@ app = FastAPI(
     openapi_url="/api/openapi.json"
 )
 
-# CORS Configuration
+# CORS Configuration - Strict Whitelist for Approved Origins
+ALLOWED_ORIGINS_ENV = os.getenv("ALLOWED_ORIGINS")
+if ALLOWED_ORIGINS_ENV:
+    ALLOWED_ORIGINS = [o.strip() for o in ALLOWED_ORIGINS_ENV.split(",") if o.strip()]
+else:
+    ALLOWED_ORIGINS = [
+        "https://satwik92105-png.github.io",
+        "https://01-austin-roasters-coffee.vercel.app",
+        "http://localhost:8000",
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:8000",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5500"
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -471,9 +487,9 @@ def toggle_stock(item_id: int, request: Request, req: Optional[StockUpdateReques
     return {"id": item.id, "inStock": item.in_stock, "in_stock": item.in_stock}
 
 # --- ORDERS (WITH IDEMPOTENCY, RECALCULATION & PAGINATION) ---
-@app.get("/orders")
-@app.get("/api/orders")
-@app.get("/api/v1/orders")
+@app.get("/orders", dependencies=[Depends(require_staff)])
+@app.get("/api/orders", dependencies=[Depends(require_staff)])
+@app.get("/api/v1/orders", dependencies=[Depends(require_staff)])
 def get_orders(
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100),
@@ -505,26 +521,53 @@ def get_orders(
 @app.get("/orders/{order_id}")
 @app.get("/api/orders/{order_id}")
 @app.get("/api/v1/orders/{order_id}")
-def get_single_order(order_id: str, db: Session = Depends(get_db)):
+def get_single_order(order_id: str, request: Request, db: Session = Depends(get_db)):
     order = db.query(OrderModel).filter(OrderModel.id == order_id, OrderModel.is_deleted == False).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order reference not found")
+    
+    # Check if caller has staff authentication
+    is_staff = False
+    try:
+        claims = get_current_user_claims(request)
+        if claims.get("role") in ["admin", "barista"]:
+            is_staff = True
+    except Exception:
+        pass
+
     is_paid = (order.status == "Paid Online" or "Paid" in (order.status or ""))
-    return {
-        "id": order.id,
-        "customerName": order.customer_name,
-        "phone": order.phone,
-        "customerPhone": order.phone,
-        "items": json.loads(order.items_json) if order.items_json else [],
-        "subtotal": order.subtotal,
-        "tax": order.tax,
-        "total": order.total,
-        "status": order.status,
-        "paidOnline": is_paid,
-        "paymentStatus": "Paid Online (Stripe)" if is_paid else "Pay at Counter",
-        "orderTime": order.order_time.isoformat() if order.order_time else "",
-        "notes": order.notes or ""
-    }
+    raw_items = json.loads(order.items_json) if order.items_json else []
+
+    if is_staff:
+        # Full order record for authorized staff
+        return {
+            "id": order.id,
+            "customerName": order.customer_name,
+            "phone": order.phone,
+            "customerPhone": order.phone,
+            "items": raw_items,
+            "subtotal": order.subtotal,
+            "tax": order.tax,
+            "total": order.total,
+            "status": order.status,
+            "paidOnline": is_paid,
+            "paymentStatus": "Paid Online (Stripe)" if is_paid else "Pay at Counter",
+            "orderTime": order.order_time.isoformat() if order.order_time else "",
+            "pickupEstimate": "10-12 mins",
+            "notes": order.notes or ""
+        }
+    else:
+        # Sanitized tracking record - protects customer PII against scrapers (BOLA / OWASP API3)
+        masked_name = (order.customer_name[:1] + "***") if len(order.customer_name) > 1 else "Guest"
+        return {
+            "id": order.id,
+            "customerName": masked_name,
+            "items": [{"name": i.get("name"), "qty": i.get("qty")} for i in raw_items],
+            "status": order.status,
+            "paidOnline": is_paid,
+            "orderTime": order.order_time.isoformat() if order.order_time else "",
+            "pickupEstimate": "10-12 mins"
+        }
 
 @app.post("/orders")
 @app.post("/api/orders")
@@ -536,23 +579,59 @@ def place_order(req: OrderCreate, request: Request, db: Session = Depends(get_db
     if cached:
         return cached
 
-    # Pre-load menu items for server-side price recalculation (Mass Assignment protection)
-    menu_catalog = {m.name.lower(): m for m in db.query(MenuItemModel).filter(MenuItemModel.is_deleted == False).all()}
+    if not req.items:
+        raise HTTPException(status_code=400, detail="Order must contain at least one item")
+
+    # Authoritative server-side price & modifier recalculation (Mass Assignment protection)
+    menu_by_id = {m.id: m for m in db.query(MenuItemModel).filter(MenuItemModel.is_deleted == False).all()}
+    menu_by_name = {m.name.lower(): m for m in menu_by_id.values()}
 
     computed_subtotal = 0.0
     sanitized_items = []
     for item in req.items:
+        if item.qty <= 0 or item.qty > 50:
+            raise HTTPException(status_code=400, detail=f"Invalid quantity {item.qty} for item '{item.name}'")
+
         clean_name = sanitize_str(item.name)
-        db_item = menu_catalog.get(clean_name.lower())
-        item_unit_price = db_item.price if db_item else (item.price if item.price > 0 else 5.0)
+        db_item = None
+        if getattr(item, "id", None) is not None and item.id in menu_by_id:
+            db_item = menu_by_id[item.id]
+        elif clean_name.lower() in menu_by_name:
+            db_item = menu_by_name[clean_name.lower()]
+
+        if not db_item:
+            # Check for partial title match
+            for cat_name, cat_m in menu_by_name.items():
+                if cat_name in clean_name.lower() or clean_name.lower() in cat_name:
+                    db_item = cat_m
+                    break
+
+        if not db_item:
+            raise HTTPException(status_code=400, detail=f"Menu item '{clean_name}' does not exist in catalog")
+
+        if not db_item.in_stock:
+            raise HTTPException(status_code=400, detail=f"Menu item '{db_item.name}' is currently out of stock")
+
+        base_price = float(db_item.price)
+        customizations_str = sanitize_str(item.customizations or "")
         
+        # Authoritative server-side modifier valuation
+        modifier_extra = 0.0
+        c_lower = customizations_str.lower()
+        if "oat milk" in c_lower or "almond milk" in c_lower or "+$0.75" in c_lower:
+            modifier_extra += 0.75
+        if "extra shot" in c_lower or "+$1.00" in c_lower:
+            modifier_extra += 1.00
+
+        item_unit_price = round(base_price + modifier_extra, 2)
         computed_subtotal += item_unit_price * item.qty
+
         sanitized_items.append({
-            "id": getattr(item, "id", None) or (db_item.id if db_item else None),
-            "name": clean_name,
+            "id": db_item.id,
+            "name": db_item.name,
             "qty": item.qty,
             "price": item_unit_price,
-            "customizations": sanitize_str(item.customizations)
+            "customizations": customizations_str
         })
 
     subtotal = round(computed_subtotal, 2)
@@ -631,10 +710,10 @@ def create_checkout_session(data: dict):
         "qrCode": f"FLATTRACK-{order_id}-PREPAID"
     }
 
-# --- RESERVATIONS (WITH IDEMPOTENCY & PAGINATION) ---
-@app.get("/reservations")
-@app.get("/api/reservations")
-@app.get("/api/v1/reservations")
+# --- RESERVATIONS (WITH IDEMPOTENCY, PAGINATION & RBAC PROTECTION) ---
+@app.get("/reservations", dependencies=[Depends(require_staff)])
+@app.get("/api/reservations", dependencies=[Depends(require_staff)])
+@app.get("/api/v1/reservations", dependencies=[Depends(require_staff)])
 def get_reservations(
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100),
@@ -716,11 +795,11 @@ def update_reservation_status(res_id: str, new_status: str, request: Request, db
 
     return {"id": res.id, "status": res.status}
 
-# --- INQUIRIES & MESSAGES ---
-@app.get("/messages")
-@app.get("/api/messages")
-@app.get("/api/inquiries")
-@app.get("/api/v1/inquiries")
+# --- INQUIRIES & MESSAGES (RBAC PROTECTED) ---
+@app.get("/messages", dependencies=[Depends(require_staff)])
+@app.get("/api/messages", dependencies=[Depends(require_staff)])
+@app.get("/api/inquiries", dependencies=[Depends(require_staff)])
+@app.get("/api/v1/inquiries", dependencies=[Depends(require_staff)])
 def get_inquiries(db: Session = Depends(get_db)):
     items = db.query(InquiryModel).all()
     return [
@@ -751,11 +830,11 @@ def create_inquiry(req: InquiryCreate, request: Request, db: Session = Depends(g
 
     return {"id": inq.id, "saved": True}
 
-# --- SUBSCRIBERS & CATERING ---
-@app.get("/subscriptions")
-@app.get("/api/subscriptions")
-@app.get("/api/subscribers")
-@app.get("/api/v1/subscribers")
+# --- SUBSCRIBERS & CATERING (RBAC PROTECTED) ---
+@app.get("/subscriptions", dependencies=[Depends(require_staff)])
+@app.get("/api/subscriptions", dependencies=[Depends(require_staff)])
+@app.get("/api/subscribers", dependencies=[Depends(require_staff)])
+@app.get("/api/v1/subscribers", dependencies=[Depends(require_staff)])
 def get_subscriptions(db: Session = Depends(get_db)):
     subs = db.query(SubscriberModel).all()
     return [
@@ -793,6 +872,55 @@ def create_subscriber(req: SubscriberCreate, request: Request, db: Session = Dep
 @app.post("/api/v1/catering")
 def create_catering(data: dict):
     return {"id": f"CAT-{random.randint(100, 999)}", "status": "Inquiry Received", "confirmed": True}
+
+# --- RESEND SECURE NOTIFICATION EMAIL INTEGRATION ---
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+
+def send_notification_email(to_email: str, subject: str, details: dict) -> dict:
+    rows_html = "".join([
+        f"<tr><td style='padding:6px 12px; border:1px solid #e5e7eb; font-weight:600;'>{html.escape(str(k))}</td>"
+        f"<td style='padding:6px 12px; border:1px solid #e5e7eb;'>{html.escape(str(v))}</td></tr>"
+        for k, v in details.items()
+    ])
+    html_content = f"""
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+      <h2 style="color: #c9a84c; margin-top: 0;">Flat Track Coffee Roasters</h2>
+      <p style="font-size: 16px; color: #1f2937;">{html.escape(subject)}</p>
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        {rows_html}
+      </table>
+      <p style="font-size: 13px; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 12px;">
+        Flat Track Coffee Roasters · 1611 E Cesar Chavez St, Austin, TX 78702 · (512) 540-6033
+      </p>
+    </div>
+    """
+    if not RESEND_API_KEY:
+        return {"status": "mock_sent", "recipient": to_email, "message": "Email queued (Resend API key not configured)"}
+    try:
+        import urllib.request
+        req = urllib.request.Request(
+            "https://api.resend.com/emails",
+            data=json.dumps({
+                "from": os.getenv("RESEND_FROM_EMAIL", "Flat Track Roastery <orders@flattrackcoffee.com>"),
+                "to": [to_email],
+                "subject": subject,
+                "html": html_content
+            }).encode("utf-8"),
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            return {"status": "sent", "code": resp.getcode()}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/notifications/send-confirmation")
+@app.post("/api/notifications/send-confirmation")
+def send_confirmation_notification(req: EmailNotificationRequest):
+    return send_notification_email(req.email, req.subject, req.details or {})
 
 # --- AUDIT LOGS (ADMIN ONLY, PAGINATED) ---
 @app.get("/audit-logs", dependencies=[Depends(require_admin)], response_model=List[AuditLogResponse])

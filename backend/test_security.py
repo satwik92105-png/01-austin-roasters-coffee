@@ -198,14 +198,22 @@ def test_idempotency_key_duplicate_prevention():
     assert order1["id"] == order2["id"]
     assert order1["total"] == order2["total"]
 
+def get_admin_token() -> str:
+    login_res = client.post("/api/auth/login", json={
+        "email": "admin@flattrackcoffee.com",
+        "password": "roastmaster123"
+    })
+    return login_res.json()["access_token"]
+
 def test_kds_role_authorization():
     # 1. Unauthenticated status update should fail
     fail_res = client.patch("/api/orders/FT-1234/status?new_status=Brewing")
     assert fail_res.status_code in [401, 403]
 
-    # 2. Update with Admin PIN (POS/KDS hardware terminal) succeeds
-    pin_headers = {"X-Admin-PIN": "1234"}
-    
+    # 2. Admin PIN bypass is rejected
+    pin_res = client.patch("/api/orders/FT-1234/status?new_status=Brewing", headers={"X-Admin-PIN": "1234"})
+    assert pin_res.status_code in [401, 403]
+
     # First create an order
     order_res = client.post("/api/orders", json={
         "customerName": "KDS Tester",
@@ -214,8 +222,12 @@ def test_kds_role_authorization():
     })
     order_id = order_res.json()["id"]
 
-    # Advance status using PIN
-    succ_res = client.patch(f"/api/orders/{order_id}/status?new_status=Brewing", headers=pin_headers)
+    # 3. Advance status using valid JWT Bearer token
+    token = get_admin_token()
+    succ_res = client.patch(
+        f"/api/orders/{order_id}/status?new_status=Brewing",
+        headers={"Authorization": f"Bearer {token}"}
+    )
     assert succ_res.status_code == 200
     assert succ_res.json()["status"] == "Brewing"
 
@@ -224,8 +236,9 @@ def test_audit_logging_and_pagination():
     unauth_res = client.get("/api/audit-logs")
     assert unauth_res.status_code in [401, 403]
 
-    # 2. Admin can read audit logs
-    admin_headers = {"X-Admin-PIN": "1234"}
+    # 2. Admin can read audit logs with valid JWT Bearer token
+    token = get_admin_token()
+    admin_headers = {"Authorization": f"Bearer {token}"}
     logs_res = client.get("/api/audit-logs?page=1&limit=10", headers=admin_headers)
     assert logs_res.status_code == 200
     logs = logs_res.json()
@@ -238,7 +251,8 @@ def test_audit_logging_and_pagination():
     assert "timestamp_utc" in first_log
 
 def test_menu_upsert_and_id_normalization():
-    admin_headers = {"X-Admin-PIN": "1234"}
+    token = get_admin_token()
+    admin_headers = {"Authorization": f"Bearer {token}"}
     
     # 1. Update item #9 using prefixed 'm9' ID
     res = client.put("/api/menu/m9", json={
@@ -274,3 +288,87 @@ def test_menu_upsert_and_id_normalization():
     assert len(menu) >= 10
     ids = [item["id"] for item in menu[:10]]
     assert ids == list(range(1, 11))
+
+def test_pin_bypass_is_completely_rejected():
+    res = client.get("/api/orders", headers={"X-Admin-PIN": "1234"})
+    assert res.status_code == 401
+    
+    res_param = client.get("/api/orders?pin=1234")
+    assert res_param.status_code == 401
+
+def test_unauthenticated_cannot_access_orders_or_reservations_pii():
+    assert client.get("/api/orders").status_code == 401
+    assert client.get("/api/reservations").status_code == 401
+    assert client.get("/api/inquiries").status_code == 401
+    assert client.get("/api/subscribers").status_code == 401
+
+def test_customer_order_tracking_masks_pii():
+    # Create order
+    order_res = client.post("/api/orders", json={
+        "customerName": "Jane Austin",
+        "phone": "(512) 555-8888",
+        "items": [{"name": "Flat Track Classic Cortado", "qty": 1, "price": 5.00}]
+    })
+    assert order_res.status_code == 200
+    order_id = order_res.json()["id"]
+
+    # Unauthenticated lookup (customer tracking)
+    track_res = client.get(f"/api/orders/{order_id}")
+    assert track_res.status_code == 200
+    track_data = track_res.json()
+    assert track_data["customerName"] == "J***"
+    assert "phone" not in track_data
+    assert "customerPhone" not in track_data
+
+    # Authenticated staff lookup gets full details
+    token = get_admin_token()
+    staff_res = client.get(f"/api/orders/{order_id}", headers={"Authorization": f"Bearer {token}"})
+    assert staff_res.status_code == 200
+    staff_data = staff_res.json()
+    assert staff_data["customerName"] == "Jane Austin"
+    assert staff_data["phone"] == "(512) 555-8888"
+
+def test_order_modifier_and_stock_validation():
+    token = get_admin_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # 1. Test out-of-stock item rejects order
+    client.patch("/api/menu/1/stock?in_stock=false", headers=headers)
+    fail_res = client.post("/api/orders", json={
+        "customerName": "Stock Tester",
+        "phone": "(512) 555-0123",
+        "items": [{"id": 1, "name": "Dogspeed Espresso Double", "qty": 1, "price": 4.50}]
+    })
+    assert fail_res.status_code == 400
+    assert "out of stock" in fail_res.json()["detail"].lower()
+    
+    # Restore stock
+    client.patch("/api/menu/1/stock?in_stock=true", headers=headers)
+
+    # 2. Test server-side modifier valuation (+0.75 for Oat Milk)
+    mod_res = client.post("/api/orders", json={
+        "customerName": "Modifier Tester",
+        "phone": "(512) 555-0123",
+        "items": [{
+            "id": 2,
+            "name": "Flat Track Classic Cortado",
+            "qty": 1,
+            "price": 5.00,
+            "customizations": "Oat Milk (+$0.75)"
+        }]
+    })
+    assert mod_res.status_code == 200
+    mod_order = mod_res.json()
+    # Cortado base $5.00 + $0.75 Oat Milk = $5.75
+    assert mod_order["subtotal"] == 5.75
+    assert mod_order["tax"] == 0.47
+    assert mod_order["total"] == 6.22
+
+def test_resend_notification_endpoint():
+    res = client.post("/api/notifications/send-confirmation", json={
+        "email": "customer@example.com",
+        "subject": "Table Reservation Confirmed",
+        "details": {"Booking Ref": "#RES-101", "Party": "2 Guests"}
+    })
+    assert res.status_code == 200
+    assert res.json()["status"] in ["sent", "mock_sent"]

@@ -9,7 +9,13 @@ from typing import Optional, List, Dict
 from fastapi import HTTPException, Security, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-SECRET_KEY = os.getenv("SECRET_KEY", "flattrack_super_secret_jwt_key_2026_austin_tx_roasters")
+_CONFIGURED_SECRET = os.getenv("SECRET_KEY")
+if _CONFIGURED_SECRET:
+    SECRET_KEY = _CONFIGURED_SECRET
+else:
+    # Ephemeral cryptographically random secret when not explicitly provided
+    # Prevents default secret forgery (CWE-798 / SEC-017)
+    SECRET_KEY = secrets.token_urlsafe(64)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 15
 
@@ -119,7 +125,10 @@ def get_current_user_claims(
 ) -> dict:
     # 1. Bearer token in Authorization header
     token = None
-    if credentials and credentials.credentials:
+    auth_header = request.headers.get("Authorization") or request.headers.get("authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ", 1)[1].strip()
+    elif credentials and hasattr(credentials, "credentials") and credentials.credentials:
         token = credentials.credentials
     
     # 2. Check HttpOnly cookie
@@ -141,20 +150,10 @@ def get_current_user_claims(
                 detail="Invalid authentication token."
             )
 
-    # 3. Check X-Admin-PIN header or Query Parameter (backward-compatibility for POS demos)
-    pin = (
-        request.headers.get("X-Admin-PIN")
-        or request.headers.get("x-admin-pin")
-        or request.query_params.get("pin")
-    )
-    if pin in ["1234", "roastmaster123"]:
-        return {"sub": "admin@flattrackcoffee.com", "role": "admin"}
-    if pin == "barista123":
-        return {"sub": "barista@flattrackcoffee.com", "role": "barista"}
-
+    # 3. No fallback PIN bypass allowed (Hardened Production RBAC)
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Authentication credentials or Admin PIN required"
+        detail="Authentication credentials required. Please provide a valid Bearer token."
     )
 
 def require_role(*allowed_roles: str):

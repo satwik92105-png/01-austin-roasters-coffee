@@ -299,18 +299,11 @@
       async function renderTracker() {
         if (!window.FlatTrackAPI) return;
 
-        // Auto-load latest active order from /api/orders if not set
+        // Auto-load latest customer active order from local session
         if (!activeOrderId) {
-          try {
-            const allOrders = await window.FlatTrackAPI.getOrders();
-            if (allOrders && allOrders.length > 0) {
-              const active = allOrders.find(o => o.status !== 'Picked Up' && o.status !== 'Completed') || allOrders[0];
-              if (active && active.id) {
-                activeOrderId = active.id;
-                localStorage.setItem('flat_track_last_order_id', active.id);
-              }
-            }
-          } catch(e) {}
+          activeOrderId = localStorage.getItem('flat_track_last_order_id') ||
+                          sessionStorage.getItem('flat_track_last_order_id') ||
+                          localStorage.getItem('flattrack_last_order_id');
         }
 
         let activeOrder = null;

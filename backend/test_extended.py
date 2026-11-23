@@ -7,45 +7,54 @@ from main import app
 
 client = TestClient(app)
 
-print("--- TESTING EXTENDED BACKEND CAPABILITIES ---")
+print("--- TESTING EXTENDED BACKEND CAPABILITIES (BEARER AUTH RBAC) ---")
 
-# 1. Test PIN-based menu create
+# 0. Authenticate admin
+login_res = client.post("/api/auth/login", json={
+    "email": "admin@flattrackcoffee.com",
+    "password": "roastmaster123"
+})
+assert login_res.status_code == 200
+admin_token = login_res.json()["access_token"]
+admin_headers = {"Authorization": f"Bearer {admin_token}"}
+
+# 1. Test authenticated menu create
 item_payload = {
-    "name": "PIN Verified Pour-Over",
+    "name": "Auth Verified Pour-Over",
     "category": "pourover",
     "price": 6.25,
-    "description": "Created with PIN 1234",
+    "description": "Created with JWT Bearer Token",
     "inStock": True
 }
-res = client.post("/api/menu", json=item_payload, headers={"X-Admin-PIN": "1234"})
-assert res.status_code == 200, f"Failed create with PIN: {res.status_code} {res.text}"
+res = client.post("/api/menu", json=item_payload, headers=admin_headers)
+assert res.status_code == 200, f"Failed create with Auth: {res.status_code} {res.text}"
 created_item = res.json()
 item_id = created_item["id"]
-print("[PASS]: Menu item created with X-Admin-PIN")
+print("[PASS]: Menu item created with JWT Bearer Token")
 
-# 2. Test PIN-based menu update (both path and body)
+# 2. Test authenticated menu update (both path and body)
 update_payload = {
-    "name": "PIN Verified Pour-Over Updated",
+    "name": "Auth Verified Pour-Over Updated",
     "category": "pourover",
     "price": 6.75,
     "description": "Updated price",
     "inStock": False
 }
-res_put = client.put(f"/api/menu/{item_id}", json=update_payload, headers={"X-Admin-PIN": "1234"})
+res_put = client.put(f"/api/menu/{item_id}", json=update_payload, headers=admin_headers)
 assert res_put.status_code == 200
 assert res_put.json()["price"] == 6.75
 print("[PASS]: Menu item updated via PUT /api/menu/{id}")
 
-# 3. Test PIN-based stock toggle
-res_stock = client.patch(f"/api/menu/{item_id}/stock", headers={"X-Admin-PIN": "1234"})
+# 3. Test authenticated stock toggle
+res_stock = client.patch(f"/api/menu/{item_id}/stock", headers=admin_headers)
 assert res_stock.status_code == 200
 assert res_stock.json()["inStock"] == True
 print("[PASS]: Menu item stock toggled via PATCH /api/menu/{id}/stock")
 
 # 4. Test delete
-res_del = client.delete(f"/api/menu/{item_id}", headers={"X-Admin-PIN": "1234"})
+res_del = client.delete(f"/api/menu/{item_id}", headers=admin_headers)
 assert res_del.status_code == 200
-print("[PASS]: Menu item deleted with X-Admin-PIN")
+print("[PASS]: Menu item deleted with JWT Bearer Token")
 
 # 5. Test order placement with extra fields
 order_payload = {
@@ -66,8 +75,8 @@ assert ord_data["paidOnline"] == True
 assert ord_data["paymentStatus"] == "Paid Online (Stripe)"
 print("[PASS]: Order placed with paidOnline=True")
 
-# 6. Test GET /api/orders has the new order
-res_all_orders = client.get("/api/orders")
+# 6. Test GET /api/orders has the new order (Staff Authenticated)
+res_all_orders = client.get("/api/orders", headers=admin_headers)
 assert res_all_orders.status_code == 200
 matching = [o for o in res_all_orders.json() if o["id"] == ord_data["id"]]
 assert len(matching) == 1

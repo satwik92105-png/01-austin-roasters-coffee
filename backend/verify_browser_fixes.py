@@ -147,10 +147,9 @@ try:
     driver.refresh()
     time.sleep(1)
 
-    pass_input = driver.find_element(By.ID, "login-pass")
-    pass_input.clear()
-    pass_input.send_keys("1234")
-    driver.find_element(By.ID, "admin-login-btn").click()
+    # Authenticate into Admin Dashboard via session auth (PIN bypass removed)
+    driver.execute_script("sessionStorage.setItem('flattrack_admin_auth', 'true');")
+    driver.refresh()
     time.sleep(1)
 
     # Click the Menu & Stock tab

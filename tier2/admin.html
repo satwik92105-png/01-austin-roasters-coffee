@@ -133,8 +133,8 @@
           <input type="email" id="login-email" class="form-input" value="admin@flattrackcoffee.com" required>
         </div>
         <div class="form-group" style="text-align: left;">
-          <label class="form-label">Password / PIN</label>
-          <input type="password" id="login-pass" class="form-input" value="" placeholder="Enter owner password or PIN" required>
+          <label class="form-label">Manager Password</label>
+          <input type="password" id="login-pass" class="form-input" value="" placeholder="Enter Manager Password" required>
         </div>
         <button type="button" id="admin-login-btn" onclick="if(window.handleTier2Login) window.handleTier2Login(event);" class="btn btn-primary btn-lg" style="width: 100%;">
           Authorize & Enter Terminal &rarr;
@@ -314,19 +314,34 @@
         showDashboard();
       }
 
-      window.handleTier2Login = function(e) {
+      window.handleTier2Login = async function(e) {
         if (e && e.preventDefault) e.preventDefault();
+        const email = (document.getElementById('login-email')?.value || 'admin@flattrackcoffee.com').trim();
         const pass = (document.getElementById('login-pass')?.value || '').trim();
-        if (pass === 'roastmaster123' || pass === '1234') {
-          sessionStorage.setItem('flattrack_admin_auth', 'true');
-          sessionStorage.setItem('flattrack_admin_pin', '1234');
-          showDashboard();
-          showToast("Authorized as Owner / GM", "success");
+        const loginBtn = document.getElementById('admin-login-btn');
+        if (loginBtn) {
+          loginBtn.disabled = true;
+          loginBtn.innerText = "Authenticating...";
+        }
+
+        try {
           if (window.FlatTrackAPI && window.FlatTrackAPI.login) {
-            window.FlatTrackAPI.login("admin@flattrackcoffee.com", pass).catch(() => {});
+            const res = await window.FlatTrackAPI.login(email, pass);
+            if (res && res.success) {
+              sessionStorage.setItem('flattrack_admin_auth', 'true');
+              showDashboard();
+              showToast("Authorized as Owner / GM", "success");
+            } else {
+              showToast(res.message || "Invalid credentials. Access denied.", "error");
+            }
           }
-        } else {
-          showToast("Invalid credentials! Try roastmaster123 or 1234", "error");
+        } catch (err) {
+          showToast("Authentication server unavailable", "error");
+        } finally {
+          if (loginBtn) {
+            loginBtn.disabled = false;
+            loginBtn.innerText = "Authorize & Enter Terminal →";
+          }
         }
         return false;
       };

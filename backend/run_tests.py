@@ -15,7 +15,12 @@ from test_security import (
     test_idempotency_key_duplicate_prevention,
     test_kds_role_authorization,
     test_audit_logging_and_pagination,
-    test_menu_upsert_and_id_normalization
+    test_menu_upsert_and_id_normalization,
+    test_pin_bypass_is_completely_rejected,
+    test_unauthenticated_cannot_access_orders_or_reservations_pii,
+    test_customer_order_tracking_masks_pii,
+    test_order_modifier_and_stock_validation,
+    test_resend_notification_endpoint
 )
 
 tests = [
@@ -29,7 +34,12 @@ tests = [
     ("test_idempotency_key_duplicate_prevention", test_idempotency_key_duplicate_prevention),
     ("test_kds_role_authorization", test_kds_role_authorization),
     ("test_audit_logging_and_pagination", test_audit_logging_and_pagination),
-    ("test_menu_upsert_and_id_normalization", test_menu_upsert_and_id_normalization)
+    ("test_menu_upsert_and_id_normalization", test_menu_upsert_and_id_normalization),
+    ("test_pin_bypass_is_completely_rejected", test_pin_bypass_is_completely_rejected),
+    ("test_unauthenticated_cannot_access_orders_or_reservations_pii", test_unauthenticated_cannot_access_orders_or_reservations_pii),
+    ("test_customer_order_tracking_masks_pii", test_customer_order_tracking_masks_pii),
+    ("test_order_modifier_and_stock_validation", test_order_modifier_and_stock_validation),
+    ("test_resend_notification_endpoint", test_resend_notification_endpoint)
 ]
 
 print("=== RUNNING FASTAPI SECURITY & ROLE VERIFICATION TESTS ===")
