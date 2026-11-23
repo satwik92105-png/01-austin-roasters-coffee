@@ -162,7 +162,7 @@
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
-          <a id="btn-add-calendar3" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
+          <a id="btn-add-calendar3" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Table+Reservation+%C2%B7+Flat+Track+Coffee+Roasters&location=1611+E+Cesar+Chavez+St%2C+Austin%2C+TX+78702&details=Table+Reservation+at+Flat+Track+Coffee+Roasters" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
             📅 Google Calendar
           </a>
           <button id="btn-download-ics3" type="button" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem;">
@@ -173,7 +173,7 @@
           <button id="btn-print-pass3" type="button" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem;">
             🖨️ Print / Save Pass
           </button>
-          <a id="btn-email-self3" href="#" class="btn btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
+          <a id="btn-email-self3" href="mailto:contact@flattrackcoffee.com?subject=Table%20Reservation%20Details%20%C2%B7%20Flat%20Track%20Coffee%20Roasters&body=Flat%20Track%20Coffee%20Roasters%20Reservation%20Details%20-%201611%20E%20Cesar%20Chavez%20St%2C%20Austin%2C%20TX" class="btn btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.4rem; font-size:0.85rem; padding:0.65rem 0.8rem; text-decoration:none;">
             ✉️ Email Booking Details
           </a>
         </div>
@@ -339,6 +339,7 @@
             } catch (err) {}
 
             // Pre-filled email link
+            const targetEmail = email || 'contact@flattrackcoffee.com';
             const emailSubject = encodeURIComponent(`Table Reservation Confirmed - Flat Track Coffee (#${res.id})`);
             const emailBody = encodeURIComponent(
               `Hi ${name},\n\n` +
@@ -351,7 +352,10 @@
               `We look forward to hosting you in East Austin!\n` +
               `Flat Track Coffee Roasters · (512) 540-6033`
             );
-            document.getElementById('btn-email-self3').href = `mailto:${encodeURIComponent(email)}?subject=${emailSubject}&body=${emailBody}`;
+            const emailLink3 = document.getElementById('btn-email-self3');
+            if (emailLink3) {
+              emailLink3.href = `mailto:${encodeURIComponent(targetEmail)}?subject=${emailSubject}&body=${emailBody}`;
+            }
 
             modal.style.display = 'flex';
             document.getElementById('close-res3-modal').onclick = () => { modal.style.display = 'none'; };

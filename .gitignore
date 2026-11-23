@@ -7,3 +7,4 @@ __pycache__/
 node_modules/
 audit/node_modules/
 audit/test-results/
+backup_pre_hardening/
